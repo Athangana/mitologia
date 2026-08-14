@@ -36,10 +36,19 @@
              El árbol cuelga a cada figura del PRIMER padre de la lista;
              el segundo aparece en la etiqueta "hijos con…".
    pareja -> los id de sus uniones. Si no tiene: borra la línea entera.
-             Por defecto se lee "casada/o con". Para decir otra cosa:
-             pareja:["hera", {id:"danae", rel:"amante"}]
-             rel puede ser "amante" o "union". Basta escribirlo en
-             una de las dos fichas: la otra lo hereda sola.
+             Basta anotar cada unión en UNA de las dos fichas: la otra
+             la muestra sola, igual que pasa con los hijos.
+             Por defecto se lee "casada con" / "casado con". Los que no
+             se casaron llevan la palabra que les corresponda:
+             pareja:["hera", {id:"leto", rel:"amante"}, {id:"europa", rel:"rapto"}]
+                (nada)     casada con / casado con
+                "amante"   amante de
+                "union"    unida a / unido a
+                "rapto"    raptó a … y en la otra ficha: raptada por …
+                "engano"   engañó a … y en la otra ficha: engañada por …
+             Los tres primeros se leen igual en las dos fichas y da lo
+             mismo dónde se escriban. Los dos últimos van en la ficha
+             de quien hace la acción; la otra lo hereda al revés.
    r      -> la reseña que sale en el panel lateral.
 
    ------------------------------------------------------------
@@ -129,7 +138,7 @@ const FIGURAS = [
   r:"Tan lejos del suelo como el suelo del cielo: un yunque tardaría nueve días en caer. Es cárcel de los titanes y, con Gea, padre de Tifón."},
  {id:"eros", n:"Eros", rol:"Primordial", epi:"El que afloja los miembros", gen:"g1", sexo:"m", padres:["caos"],
   r:"En la versión antigua no es el niño con arco sino la fuerza más vieja del mundo: sin él nada se une y la creación se detiene."},
- {id:"erebo", n:"Érebo", rol:"Primordial", epi:"La tiniebla", gen:"g1", sexo:"m", padres:["caos"], pareja:["nix"],
+ {id:"erebo", n:"Érebo", rol:"Primordial", epi:"La tiniebla", gen:"g1", sexo:"m", padres:["caos"], pareja:[{id:"nix",rel:"union"}],
   r:"La oscuridad densa que ocupa el espacio entre la tierra y el mundo de los muertos. De su unión con Nix nacen el aire luminoso y el día."},
  {id:"nix", n:"Nix", rol:"Primordial", epi:"La noche", gen:"g1", sexo:"f", padres:["caos"], pareja:["erebo"],
   r:"Madre del Sueño, la Muerte, las Moiras y la Discordia. Hasta Zeus la respeta: la Ilíada cuenta que se abstuvo de ofenderla por temor."},
@@ -193,9 +202,9 @@ const FIGURAS = [
  {id:"poseidon", n:"Poseidón", rol:"Olímpico", epi:"El que sacude la tierra", gen:"g4", sexo:"m", padres:["crono","rea"],
   r:"Manda en el mar, los caballos y los terremotos. Pierde el Ática ante Atenea y persigue a Odiseo por haber cegado a su hijo el cíclope."},
  {id:"zeus", n:"Zeus", rol:"Olímpico", epi:"Padre de dioses y hombres", gen:"g4", sexo:"m", padres:["crono","rea"],
-  pareja:["hera","metis","temis",{id:"demeter",rel:"amante"},{id:"leto",rel:"amante"},{id:"mnemosine",rel:"amante"},
-          {id:"alcmena",rel:"amante"},{id:"danae",rel:"amante"},{id:"leda",rel:"amante"},{id:"europa",rel:"amante"},
-          {id:"semele",rel:"amante"},{id:"maya",rel:"amante"}],
+  pareja:["hera","metis","temis",{id:"leto",rel:"amante"},{id:"mnemosine",rel:"amante"},{id:"maya",rel:"amante"},
+          {id:"semele",rel:"amante"},{id:"demeter",rel:"union"},{id:"danae",rel:"union"},
+          {id:"europa",rel:"rapto"},{id:"alcmena",rel:"engano"},{id:"leda",rel:"engano"}],
   r:"Guarda el rayo y el orden del mundo, incluido el juramento y la hospitalidad. Rompe el ciclo de padres derrocados tragando a Metis antes de que le dé un hijo más fuerte que él."},
  {id:"afrodita", n:"Afrodita", rol:"Olímpica", epi:"La nacida de la espuma", gen:"g4", sexo:"f", padres:["urano"], pareja:[{id:"anquises",rel:"amante"}],
   r:"Surge del mar donde cayeron los restos de Urano, así que es más antigua que Zeus. Su poder no admite excepciones: solo Atenea, Ártemis y Hestia le resisten."},

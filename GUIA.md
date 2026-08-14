@@ -43,6 +43,7 @@ Qué significa cada campo:
   para que la página escriba *casada con* o *casado con*, *hija* o *hijo*.
 - **`padres`** — los `id` de sus padres. Si no los sabes: `padres:[]`.
 - **`pareja`** — los `id` de sus uniones. Si no tiene ninguna, borra la línea entera.
+  Basta anotar cada unión en **una** de las dos fichas: la otra la muestra sola.
 - **`r`** — la reseña que aparece en el panel lateral.
 
 **Los hijos no se escriben.** La página los deduce sola: si pones a Cadmo como
@@ -63,14 +64,38 @@ Si quieres mover una rama de sitio, invierte el orden de los padres.
 
 ### Uniones que no son matrimonios
 
-Por defecto se lee *casada con* / *casado con*. Para matizarlo:
+Por defecto se lee *casada con* / *casado con*. Cuando no hubo boda, se pone la
+palabra que corresponda:
 
 ```js
-pareja:["hera", {id:"danae", rel:"amante"}]
+pareja:["hera", {id:"leto", rel:"amante"}, {id:"europa", rel:"rapto"}]
 ```
 
-`rel` acepta `"amante"` (*amante de*) y `"union"` (*unida a* / *unido a*).
-Basta escribirlo en **una** de las dos fichas: la otra lo hereda sola.
+| `rel` | Cómo se lee | Dónde se escribe |
+|---|---|---|
+| *(nada)* | casada con · casado con | cualquiera de las dos fichas |
+| `"amante"` | amante de | cualquiera de las dos |
+| `"union"` | unida a · unido a | cualquiera de las dos |
+| `"rapto"` | raptó a … · raptada por … | en la ficha de **quien rapta** |
+| `"engano"` | engañó a … · engañada por … | en la ficha de **quien engaña** |
+
+Las tres primeras se leen igual en ambas fichas, así que da lo mismo dónde las
+pongas. Las dos últimas cambian de voz: se escriben en la ficha de quien hace la
+acción y la otra las hereda al revés —en la de Zeus dice *raptó a Europa* y en la
+de Europa, *raptada por Zeus*—. Escribe `"engano"` sin eñe.
+
+Así está repartido ahora mismo:
+
+- **casada/o con** — Gea y Urano · Crono y Rea · Océano y Tetis · Hiperión y Tea ·
+  Ceo y Febe · Zeus con Hera, Metis y Temis · Hades y Perséfone · Hefesto y Afrodita
+- **unida/o a** — Gea con Ponto y con Tártaro · Érebo y Nix · Zeus con Deméter y con Dánae
+- **amante de** — Zeus con Leto, Mnemósine, Maya y Sémele · Ares y Afrodita ·
+  Afrodita y Anquises
+- **raptó a** — Zeus y Europa
+- **engañó a** — Zeus con Alcmena y con Leda
+
+Si alguna no te convence, cambia una sola palabra en `datos.js` y la página se
+reescribe sola en las dos fichas.
 
 ---
 

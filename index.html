@@ -308,12 +308,21 @@ const porId=Object.fromEntries(FIG.map(f=>[f.id,f]));
    PARENTESCO — las palabras y quién cuelga de quién
    ========================================================== */
 
-/* Si quieres cambiar el vocabulario del árbol, es aquí. */
+/* Si quieres cambiar el vocabulario del árbol, es aquí.
+   Cada unión tiene dos voces: "act" es como lo dice la ficha donde
+   se escribió el rel, y "pas" como lo dice la ficha de la otra parte.
+   Cuando no hay "pas", las dos fichas leen lo mismo. */
 function palNacio(s){return s==="pl"?"nacieron de":"nació de"}
-function palUnion(s,rel){
-  if(rel==="amante") return "amante de";
-  if(rel==="union")  return s==="pl"?"unidos a":(s==="f"?"unida a":"unido a");
-  return s==="pl"?"unidos a":(s==="f"?"casada con":"casado con");
+const VOCES={
+  boda:   {act:s=>s==="pl"?"unidos a":(s==="f"?"casada con":"casado con")},
+  amante: {act:()=>"amante de"},
+  union:  {act:s=>s==="pl"?"unidos a":(s==="f"?"unida a":"unido a")},
+  rapto:  {act:()=>"raptó a",  pas:s=>s==="f"?"raptada por":"raptado por"},
+  engano: {act:()=>"engañó a", pas:s=>s==="f"?"engañada por":"engañado por"}
+};
+function palUnion(s,rel,voz){
+  const v=VOCES[rel]||VOCES.boda;
+  return (v[voz]||v.act)(s);
 }
 function palHijos(ids,conId){
   const f=ids.every(i=>(porId[i]||{}).sexo==="f");
@@ -321,22 +330,38 @@ function palHijos(ids,conId){
   return conId&&porId[conId]?`${base} con ${porId[conId].n}`:base;
 }
 
-/* Una unión se puede escribir en cualquiera de las dos fichas:
-   la otra hereda el matiz ("amante", "union"). */
-function clave(a,b){return [a,b].sort().join("|")}
-const relDePar={};
-FIG.forEach(f=>(f.pareja||[]).forEach(p=>{
-  const o=(typeof p==="string")?{id:p}:p;
-  if(o.rel&&porId[o.id]) relDePar[clave(f.id,o.id)]=o.rel;
-}));
+/* Una unión es mutua: basta escribirla en una de las dos fichas y la
+   otra la muestra sola. El matiz va en la ficha de quien lleva la
+   iniciativa; la otra lo hereda en voz pasiva. */
+const relDirigida={},unionesDe={};
+function anotaUnion(a,b){
+  const l=unionesDe[a]=unionesDe[a]||[];
+  if(!l.includes(b)) l.push(b);
+}
+function cadaUnion(fn){
+  FIG.forEach(f=>(f.pareja||[]).forEach(p=>{
+    const id=(typeof p==="string")?p:p.id;
+    if(porId[id]&&id!==f.id) fn(f,id,p);
+  }));
+}
+/* primero las que cada ficha declara —así manda su orden—
+   y después las que hereda de la otra parte */
+cadaUnion((f,id,p)=>{
+  if(typeof p!=="string"&&p.rel) relDirigida[f.id+"|"+id]=p.rel;
+  anotaUnion(f.id,id);
+});
+cadaUnion((f,id)=>anotaUnion(id,f.id));
+function relEntre(a,b){
+  if(relDirigida[a+"|"+b]) return [relDirigida[a+"|"+b],"act"];
+  if(relDirigida[b+"|"+a]) return [relDirigida[b+"|"+a],"pas"];
+  return ["boda","act"];
+}
 
 /* Uniones de una figura, agrupadas por el matiz de la relación. */
 function gruposUnion(f){
   const grupos=[],idx={};
-  (f.pareja||[]).forEach(p=>{
-    const id=(typeof p==="string")?p:p.id;
-    if(!porId[id]) return;
-    const rel=palUnion(f.sexo,relDePar[clave(f.id,id)]);
+  (unionesDe[f.id]||[]).forEach(id=>{
+    const rel=palUnion(f.sexo,...relEntre(f.id,id));
     if(!(rel in idx)){idx[rel]=grupos.length;grupos.push({rel,ids:[]})}
     grupos[idx[rel]].ids.push(id);
   });
