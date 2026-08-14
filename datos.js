@@ -1,18 +1,72 @@
 /* ============================================================
-   DATOS DEL ANEXO — este es el unico archivo que necesitas
+   DATOS DEL ANEXO — este es el único archivo que necesitas
    tocar para agregar o corregir contenido del libro.
    No hace falta saber programar: copia el formato de una
    entrada existente y cambia el texto entre comillas.
 
-   ERAS         -> los grandes bloques de la cronologia
-   CRONOLOGIA   -> cada episodio (era, marca, titulo, resena, ver)
-   GENERACIONES -> los bloques del arbol genealogico
-   FIGURAS      -> cada personaje (id, n, rol, epi, gen, padres,
-                   pareja, r = resena)
+   Hay una guía larga, con ejemplos y errores frecuentes,
+   en el archivo GUIA.md que está junto a este.
 
-   Regla unica: el "id" de cada figura debe ser unico y sin
-   tildes ni espacios, porque es el que usan "padres",
-   "pareja" y "ver" para enlazar unos con otros.
+   ------------------------------------------------------------
+   LAS CUATRO LISTAS
+   ------------------------------------------------------------
+   ERAS         -> los grandes bloques de la cronología
+   CRONOLOGIA   -> cada episodio (era, marca, titulo, resena, ver)
+   GENERACIONES -> los bloques del árbol genealógico
+   FIGURAS      -> cada personaje (id, n, rol, epi, gen, sexo,
+                   padres, pareja, r = reseña)
+
+   ------------------------------------------------------------
+   PARA AGREGAR UN PERSONAJE (copia y pega esto dentro de FIGURAS)
+   ------------------------------------------------------------
+   {id:"cadmo", n:"Cadmo", rol:"Rey", epi:"El fundador de Tebas",
+    gen:"g5", sexo:"m", padres:["agenor"], pareja:["harmonia"],
+    r:"Reseña de dos o tres frases."},
+
+   id     -> nombre corto, sin tildes, sin espacios, sin repetir.
+             Es la etiqueta interna que usan padres, pareja y ver.
+   n      -> el nombre como quieres que se lea (aquí sí van tildes).
+   rol    -> la palabra pequeña bajo el nombre: Héroe, Titán, Mortal…
+   epi    -> el epíteto en cursiva. Puedes dejarlo vacío: epi:""
+   gen    -> a qué bloque del árbol pertenece: g1…g5 (ver GENERACIONES).
+   sexo   -> "f" femenino, "m" masculino, "pl" plural (Los Cíclopes).
+             Solo sirve para que la página escriba "casada con" o
+             "casado con", "hija" o "hijo". Si lo olvidas, usa el masculino.
+   padres -> los id de sus padres. Si no los sabes: padres:[]
+             El árbol cuelga a cada figura del PRIMER padre de la lista;
+             el segundo aparece en la etiqueta "hijos con…".
+   pareja -> los id de sus uniones. Si no tiene: borra la línea entera.
+             Por defecto se lee "casada/o con". Para decir otra cosa:
+             pareja:["hera", {id:"danae", rel:"amante"}]
+             rel puede ser "amante" o "union". Basta escribirlo en
+             una de las dos fichas: la otra lo hereda sola.
+   r      -> la reseña que sale en el panel lateral.
+
+   ------------------------------------------------------------
+   PARA AGREGAR UN EPISODIO (copia y pega esto dentro de CRONOLOGIA)
+   ------------------------------------------------------------
+   {era:"e4", marca:"Generación II", titulo:"Belerofonte y la Quimera",
+    resena:"Dos o tres frases.", ver:["atenea","poseidon"]},
+
+   era    -> a qué era pertenece: e1…e5 (ver ERAS). Manda el orden.
+   marca  -> la etiqueta pequeña de arriba. Inventa las que quieras.
+   ver    -> los id de las figuras que quedan enlazadas al pie del
+             episodio. Si no quieres ninguna: ver:[]
+
+   ------------------------------------------------------------
+   PARA QUITAR ALGO SIN PERDERLO
+   ------------------------------------------------------------
+   Agrega oculto:true a la entrada y desaparece de la página, pero
+   el texto sigue guardado aquí por si lo quieres de vuelta:
+   {era:"e5", oculto:true, marca:"…", titulo:"…", resena:"…"},
+   Funciona igual en FIGURAS, en ERAS y en GENERACIONES.
+
+   ------------------------------------------------------------
+   LAS DOS REGLAS QUE HAY QUE RESPETAR
+   ------------------------------------------------------------
+   1. Cada entrada va entre llaves { } y termina con una coma,
+      menos la última de la lista.
+   2. Los id se escriben sin tildes ni espacios y no se repiten.
    ============================================================ */
 
 const ERAS = [
@@ -65,130 +119,133 @@ const GENERACIONES = [
  {id:"g5", titulo:"Héroes y semidioses"}
 ];
 
-/* padres: ids · pareja: ids (uniones notables) */
+/* padres: ids · pareja: ids (uniones notables) · sexo: "f" | "m" | "pl" */
 const FIGURAS = [
- {id:"caos", n:"Caos", rol:"Primordial", epi:"La sima que se abre", gen:"g1", padres:[],
+ {id:"caos", n:"Caos", rol:"Primordial", epi:"La sima que se abre", gen:"g1", sexo:"m", padres:[],
   r:"El primer principio: un hueco bostezante, sin forma ni límite. No engendra por unión sino por simple aparición, y de él salen la noche y la sombra."},
- {id:"gea", n:"Gea", rol:"Primordial", epi:"La tierra de amplio pecho", gen:"g1", padres:["caos"], pareja:["urano","ponto","tartaro"],
+ {id:"gea", n:"Gea", rol:"Primordial", epi:"La tierra de amplio pecho", gen:"g1", sexo:"f", padres:["caos"], pareja:["urano",{id:"ponto",rel:"union"},{id:"tartaro",rel:"union"}],
   r:"Suelo firme y madre de casi todo lo que existe. Es también la conspiradora perpetua: arma a Crono contra Urano, y después a los Gigantes y a Tifón contra Zeus."},
- {id:"tartaro", n:"Tártaro", rol:"Primordial", epi:"El abismo bajo la tierra", gen:"g1", padres:["caos"], pareja:["gea"],
+ {id:"tartaro", n:"Tártaro", rol:"Primordial", epi:"El abismo bajo la tierra", gen:"g1", sexo:"m", padres:["caos"], pareja:["gea"],
   r:"Tan lejos del suelo como el suelo del cielo: un yunque tardaría nueve días en caer. Es cárcel de los titanes y, con Gea, padre de Tifón."},
- {id:"eros", n:"Eros", rol:"Primordial", epi:"El que afloja los miembros", gen:"g1", padres:["caos"],
+ {id:"eros", n:"Eros", rol:"Primordial", epi:"El que afloja los miembros", gen:"g1", sexo:"m", padres:["caos"],
   r:"En la versión antigua no es el niño con arco sino la fuerza más vieja del mundo: sin él nada se une y la creación se detiene."},
- {id:"erebo", n:"Érebo", rol:"Primordial", epi:"La tiniebla", gen:"g1", padres:["caos"], pareja:["nix"],
+ {id:"erebo", n:"Érebo", rol:"Primordial", epi:"La tiniebla", gen:"g1", sexo:"m", padres:["caos"], pareja:["nix"],
   r:"La oscuridad densa que ocupa el espacio entre la tierra y el mundo de los muertos. De su unión con Nix nacen el aire luminoso y el día."},
- {id:"nix", n:"Nix", rol:"Primordial", epi:"La noche", gen:"g1", padres:["caos"], pareja:["erebo"],
+ {id:"nix", n:"Nix", rol:"Primordial", epi:"La noche", gen:"g1", sexo:"f", padres:["caos"], pareja:["erebo"],
   r:"Madre del Sueño, la Muerte, las Moiras y la Discordia. Hasta Zeus la respeta: la Ilíada cuenta que se abstuvo de ofenderla por temor."},
- {id:"urano", n:"Urano", rol:"Primordial", epi:"El cielo estrellado", gen:"g1", padres:["gea"], pareja:["gea"],
+ {id:"urano", n:"Urano", rol:"Primordial", epi:"El cielo estrellado", gen:"g1", sexo:"m", padres:["gea"], pareja:["gea"],
   r:"Nacido de Gea sin padre y convertido después en su esposo. Encierra a sus hijos monstruosos en el vientre de la tierra y por eso cae bajo la hoz de Crono."},
- {id:"ponto", n:"Ponto", rol:"Primordial", epi:"El mar sin cultivar", gen:"g1", padres:["gea"], pareja:["gea"],
+ {id:"ponto", n:"Ponto", rol:"Primordial", epi:"El mar sin cultivar", gen:"g1", sexo:"m", padres:["gea"], pareja:["gea"],
   r:"El mar anterior a Poseidón, sin voluntad ni templos. Con Gea engendra a Nereo, el viejo del mar, y a la estirpe de los monstruos marinos."},
- {id:"ciclopes", n:"Los Cíclopes", rol:"Primordial", epi:"Brontes, Estéropes y Arges", gen:"g1", padres:["gea","urano"],
+ {id:"ciclopes", n:"Los Cíclopes", rol:"Primordial", epi:"Brontes, Estéropes y Arges", gen:"g1", sexo:"pl", padres:["gea","urano"],
   r:"Herreros de un solo ojo, encerrados dos veces y liberados por Zeus. Su agradecimiento cambia la historia: forjan el rayo, el tridente y el casco de invisibilidad."},
- {id:"hecatonquiros", n:"Los Hecatónquiros", rol:"Primordial", epi:"Los de cien brazos", gen:"g1", padres:["gea","urano"],
+ {id:"hecatonquiros", n:"Los Hecatónquiros", rol:"Primordial", epi:"Los de cien brazos", gen:"g1", sexo:"pl", padres:["gea","urano"],
   r:"Coto, Briareo y Giges, con cincuenta cabezas cada uno. Deciden la Titanomaquia arrojando trescientas rocas a la vez y quedan de guardianes en el Tártaro."},
 
- {id:"crono", n:"Crono", rol:"Titán", epi:"El de mente retorcida", gen:"g2", padres:["gea","urano"], pareja:["rea"],
+ {id:"crono", n:"Crono", rol:"Titán", epi:"El de mente retorcida", gen:"g2", sexo:"m", padres:["gea","urano"], pareja:["rea"],
   r:"El menor y más audaz de los titanes. Derroca a su padre y gobierna la edad de oro, pero devora a sus hijos por miedo a repetir su propio crimen."},
- {id:"rea", n:"Rea", rol:"Titánide", epi:"La madre de los dioses", gen:"g2", padres:["gea","urano"], pareja:["crono"],
+ {id:"rea", n:"Rea", rol:"Titánide", epi:"La madre de los dioses", gen:"g2", sexo:"f", padres:["gea","urano"], pareja:["crono"],
   r:"Esposa y hermana de Crono. Salva a Zeus escondiéndolo en Creta y entregando a su marido una piedra envuelta en pañales."},
- {id:"oceano", n:"Océano", rol:"Titán", epi:"El río que rodea el mundo", gen:"g2", padres:["gea","urano"], pareja:["tetis-t"],
+ {id:"oceano", n:"Océano", rol:"Titán", epi:"El río que rodea el mundo", gen:"g2", sexo:"m", padres:["gea","urano"], pareja:["tetis-t"],
   r:"No participa en la guerra contra Zeus y conserva su dominio. De él y Tetis nacen los tres mil ríos y las oceánides."},
- {id:"tetis-t", n:"Tetis", rol:"Titánide", epi:"Nodriza de las aguas", gen:"g2", padres:["gea","urano"], pareja:["oceano"],
+ {id:"tetis-t", n:"Tetis", rol:"Titánide", epi:"Nodriza de las aguas", gen:"g2", sexo:"f", padres:["gea","urano"], pareja:["oceano"],
   r:"Madre de todos los cursos de agua dulce. No debe confundirse con Tetis la nereida, madre de Aquiles: son dos figuras distintas con nombre casi idéntico."},
- {id:"hiperion", n:"Hiperión", rol:"Titán", epi:"El que va por lo alto", gen:"g2", padres:["gea","urano"], pareja:["tea"],
+ {id:"hiperion", n:"Hiperión", rol:"Titán", epi:"El que va por lo alto", gen:"g2", sexo:"m", padres:["gea","urano"], pareja:["tea"],
   r:"Titán de la luz celeste y padre de los tres astros. Antes de Apolo, la carrera del sol le pertenece a su linaje."},
- {id:"tea", n:"Tea", rol:"Titánide", epi:"La de ojos brillantes", gen:"g2", padres:["gea","urano"], pareja:["hiperion"],
+ {id:"tea", n:"Tea", rol:"Titánide", epi:"La de ojos brillantes", gen:"g2", sexo:"f", padres:["gea","urano"], pareja:["hiperion"],
   r:"Diosa de la vista y del brillo del metal y las piedras preciosas. Los griegos creían que el oro reluce porque ella lo mira."},
- {id:"ceo", n:"Ceo", rol:"Titán", epi:"El eje del cielo", gen:"g2", padres:["gea","urano"], pareja:["febe"],
+ {id:"ceo", n:"Ceo", rol:"Titán", epi:"El eje del cielo", gen:"g2", sexo:"m", padres:["gea","urano"], pareja:["febe"],
   r:"Titán del pilar norte y del intelecto que interroga. Abuelo de Apolo y Ártemis por su hija Leto."},
- {id:"febe", n:"Febe", rol:"Titánide", epi:"La resplandeciente", gen:"g2", padres:["gea","urano"], pareja:["ceo"],
+ {id:"febe", n:"Febe", rol:"Titánide", epi:"La resplandeciente", gen:"g2", sexo:"f", padres:["gea","urano"], pareja:["ceo"],
   r:"Dueña del oráculo de Delfos antes que Apolo, a quien se lo cede como regalo. De ella toma su nieto el epíteto Febo."},
- {id:"crio", n:"Crío", rol:"Titán", epi:"El carnero", gen:"g2", padres:["gea","urano"],
+ {id:"crio", n:"Crío", rol:"Titán", epi:"El carnero", gen:"g2", sexo:"m", padres:["gea","urano"],
   r:"El más oscuro de los doce, asociado a las constelaciones y al pilar sur. Su descendencia domina los vientos y los astros errantes."},
- {id:"japeto", n:"Jápeto", rol:"Titán", epi:"El perforador", gen:"g2", padres:["gea","urano"],
+ {id:"japeto", n:"Jápeto", rol:"Titán", epi:"El perforador", gen:"g2", sexo:"m", padres:["gea","urano"],
   r:"Padre de Prometeo, Epimeteo y Atlas: la rama titánica que se juega el destino de los mortales. Los griegos lo tenían por antepasado de la humanidad."},
- {id:"temis", n:"Temis", rol:"Titánide", epi:"La ley que no se escribe", gen:"g2", padres:["gea","urano"], pareja:["zeus"],
+ {id:"temis", n:"Temis", rol:"Titánide", epi:"La ley que no se escribe", gen:"g2", sexo:"f", padres:["gea","urano"], pareja:["zeus"],
   r:"Encarna el orden justo y la costumbre. Consejera de Zeus y madre de las Horas y las Moiras, es la única titánide sentada en el Olimpo."},
- {id:"mnemosine", n:"Mnemósine", rol:"Titánide", epi:"La memoria", gen:"g2", padres:["gea","urano"], pareja:["zeus"],
+ {id:"mnemosine", n:"Mnemósine", rol:"Titánide", epi:"La memoria", gen:"g2", sexo:"f", padres:["gea","urano"], pareja:["zeus"],
   r:"Nueve noches con Zeus y nueve Musas: la poesía nace de la memoria, no de la inspiración súbita. Sin ella no habría relato del mito."},
 
- {id:"helios", n:"Helios", rol:"Titán menor", epi:"El sol", gen:"g3", padres:["hiperion","tea"],
+ {id:"helios", n:"Helios", rol:"Titán menor", epi:"El sol", gen:"g3", sexo:"m", padres:["hiperion","tea"],
   r:"Cruza el cielo en un carro de cuatro caballos y lo ve todo: es quien delata a Afrodita ante Hefesto y a Hades ante Deméter."},
- {id:"selene", n:"Selene", rol:"Titánide menor", epi:"La luna", gen:"g3", padres:["hiperion","tea"],
+ {id:"selene", n:"Selene", rol:"Titánide menor", epi:"La luna", gen:"g3", sexo:"f", padres:["hiperion","tea"],
   r:"Conduce un carro de plata y ama al pastor Endimión, a quien Zeus concede un sueño eterno para que nunca envejezca."},
- {id:"eos", n:"Eos", rol:"Titánide menor", epi:"La de dedos de rosa", gen:"g3", padres:["hiperion","tea"],
+ {id:"eos", n:"Eos", rol:"Titánide menor", epi:"La de dedos de rosa", gen:"g3", sexo:"f", padres:["hiperion","tea"],
   r:"Abre las puertas del cielo cada mañana. Pidió la inmortalidad para su amante Titono pero olvidó pedir la juventud, y él envejeció sin poder morir."},
- {id:"leto", n:"Leto", rol:"Titánide menor", epi:"La discreta", gen:"g3", padres:["ceo","febe"], pareja:["zeus"],
+ {id:"leto", n:"Leto", rol:"Titánide menor", epi:"La discreta", gen:"g3", sexo:"f", padres:["ceo","febe"], pareja:["zeus"],
   r:"Perseguida por Hera, ninguna tierra firme se atreve a acogerla hasta que la isla flotante de Delos la recibe. Allí da a luz a los gemelos arqueros."},
- {id:"prometeo", n:"Prometeo", rol:"Titán menor", epi:"El que piensa antes", gen:"g3", padres:["japeto"],
+ {id:"prometeo", n:"Prometeo", rol:"Titán menor", epi:"El que piensa antes", gen:"g3", sexo:"m", padres:["japeto"],
   r:"Modela a los hombres con barro y les roba el fuego. Conoce el secreto que puede destronar a Zeus y por eso resiste treinta generaciones de tortura sin hablar."},
- {id:"epimeteo", n:"Epimeteo", rol:"Titán menor", epi:"El que piensa después", gen:"g3", padres:["japeto"],
+ {id:"epimeteo", n:"Epimeteo", rol:"Titán menor", epi:"El que piensa después", gen:"g3", sexo:"m", padres:["japeto"],
   r:"Reparte todas las cualidades entre los animales y deja al hombre desnudo. Acepta a Pandora pese a la advertencia de su hermano."},
- {id:"atlas", n:"Atlas", rol:"Titán menor", epi:"El que sostiene", gen:"g3", padres:["japeto"],
+ {id:"atlas", n:"Atlas", rol:"Titán menor", epi:"El que sostiene", gen:"g3", sexo:"m", padres:["japeto"],
   r:"Condenado a cargar la bóveda del cielo por su bando en la Titanomaquia. Solo se libra un instante, cuando Heracles se la sostiene para pedirle las manzanas de oro."},
 
- {id:"hestia", n:"Hestia", rol:"Olímpica", epi:"El hogar", gen:"g4", padres:["crono","rea"],
+ {id:"hestia", n:"Hestia", rol:"Olímpica", epi:"El hogar", gen:"g4", sexo:"f", padres:["crono","rea"],
   r:"La primogénita devorada y la última en salir. Renuncia a su trono y a todo relato: su presencia es el fuego que no se deja apagar en la casa y en la ciudad."},
- {id:"demeter", n:"Deméter", rol:"Olímpica", epi:"La madre del grano", gen:"g4", padres:["crono","rea"], pareja:["zeus"],
+ {id:"demeter", n:"Deméter", rol:"Olímpica", epi:"La madre del grano", gen:"g4", sexo:"f", padres:["crono","rea"], pareja:["zeus"],
   r:"Enseña la agricultura y controla la fertilidad de la tierra. Su duelo por Perséfone es la única vez que un dios doblega a otro por hambre."},
- {id:"hera", n:"Hera", rol:"Olímpica", epi:"Reina del Olimpo", gen:"g4", padres:["crono","rea"], pareja:["zeus"],
+ {id:"hera", n:"Hera", rol:"Olímpica", epi:"Reina del Olimpo", gen:"g4", sexo:"f", padres:["crono","rea"], pareja:["zeus"],
   r:"Diosa del matrimonio legítimo y esposa de un marido que jamás lo respeta. Su cólera persigue a las amantes y a los hijos bastardos, sobre todo a Heracles."},
- {id:"hades", n:"Hades", rol:"Olímpico", epi:"El de mucha riqueza", gen:"g4", padres:["crono","rea"], pareja:["persefone"],
+ {id:"hades", n:"Hades", rol:"Olímpico", epi:"El de mucha riqueza", gen:"g4", sexo:"m", padres:["crono","rea"], pareja:["persefone"],
   r:"Señor de los muertos, no dios de la maldad: es inflexible, no cruel. Casi nunca sube al Olimpo y su nombre se evita en voz alta."},
- {id:"poseidon", n:"Poseidón", rol:"Olímpico", epi:"El que sacude la tierra", gen:"g4", padres:["crono","rea"],
+ {id:"poseidon", n:"Poseidón", rol:"Olímpico", epi:"El que sacude la tierra", gen:"g4", sexo:"m", padres:["crono","rea"],
   r:"Manda en el mar, los caballos y los terremotos. Pierde el Ática ante Atenea y persigue a Odiseo por haber cegado a su hijo el cíclope."},
- {id:"zeus", n:"Zeus", rol:"Olímpico", epi:"Padre de dioses y hombres", gen:"g4", padres:["crono","rea"], pareja:["hera","demeter","leto","temis","mnemosine","alcmena","danae","leda","europa","semele","maya","metis"],
+ {id:"zeus", n:"Zeus", rol:"Olímpico", epi:"Padre de dioses y hombres", gen:"g4", sexo:"m", padres:["crono","rea"],
+  pareja:["hera","metis","temis",{id:"demeter",rel:"amante"},{id:"leto",rel:"amante"},{id:"mnemosine",rel:"amante"},
+          {id:"alcmena",rel:"amante"},{id:"danae",rel:"amante"},{id:"leda",rel:"amante"},{id:"europa",rel:"amante"},
+          {id:"semele",rel:"amante"},{id:"maya",rel:"amante"}],
   r:"Guarda el rayo y el orden del mundo, incluido el juramento y la hospitalidad. Rompe el ciclo de padres derrocados tragando a Metis antes de que le dé un hijo más fuerte que él."},
- {id:"afrodita", n:"Afrodita", rol:"Olímpica", epi:"La nacida de la espuma", gen:"g4", padres:["urano"], pareja:["anquises"],
+ {id:"afrodita", n:"Afrodita", rol:"Olímpica", epi:"La nacida de la espuma", gen:"g4", sexo:"f", padres:["urano"], pareja:[{id:"anquises",rel:"amante"}],
   r:"Surge del mar donde cayeron los restos de Urano, así que es más antigua que Zeus. Su poder no admite excepciones: solo Atenea, Ártemis y Hestia le resisten."},
- {id:"atenea", n:"Atenea", rol:"Olímpica", epi:"La de ojos de lechuza", gen:"g4", padres:["zeus","metis"],
+ {id:"atenea", n:"Atenea", rol:"Olímpica", epi:"La de ojos de lechuza", gen:"g4", sexo:"f", padres:["zeus","metis"],
   r:"Nace armada de la cabeza de Zeus. Es la guerra pensada frente a la carnicería de Ares, y patrona de los héroes que ganan con astucia: Perseo, Heracles, Odiseo."},
- {id:"apolo", n:"Apolo", rol:"Olímpico", epi:"El del arco de plata", gen:"g4", padres:["zeus","leto"],
+ {id:"apolo", n:"Apolo", rol:"Olímpico", epi:"El del arco de plata", gen:"g4", sexo:"m", padres:["zeus","leto"],
   r:"Oráculo, música, medicina y peste: cura y mata con la misma flecha. Su templo en Delfos ordena conocerse a uno mismo y no pasarse de la raya."},
- {id:"artemisa", n:"Ártemis", rol:"Olímpica", epi:"La cazadora", gen:"g4", padres:["zeus","leto"],
+ {id:"artemisa", n:"Ártemis", rol:"Olímpica", epi:"La cazadora", gen:"g4", sexo:"f", padres:["zeus","leto"],
   r:"Gemela de Apolo y virgen por elección. Protege a las crías y a las jóvenes, y castiga sin apelación a quien invade su bosque: Acteón terminó devorado por sus perros."},
- {id:"ares", n:"Ares", rol:"Olímpico", epi:"El azote de los hombres", gen:"g4", padres:["zeus","hera"], pareja:["afrodita"],
+ {id:"ares", n:"Ares", rol:"Olímpico", epi:"El azote de los hombres", gen:"g4", sexo:"m", padres:["zeus","hera"], pareja:[{id:"afrodita",rel:"amante"}],
   r:"La guerra como matanza y pánico, sin gloria. Ni su padre lo quiere, y en la Ilíada Atenea lo derriba de un pedrada."},
- {id:"hefesto", n:"Hefesto", rol:"Olímpico", epi:"El herrero cojo", gen:"g4", padres:["hera"], pareja:["afrodita"],
+ {id:"hefesto", n:"Hefesto", rol:"Olímpico", epi:"El herrero cojo", gen:"g4", sexo:"m", padres:["hera"], pareja:["afrodita"],
   r:"Único dios que trabaja. Concebido por Hera sin varón y arrojado del Olimpo, se venga con obras maestras: las armas de Aquiles, los autómatas de oro, la red que atrapa a los amantes."},
- {id:"hermes", n:"Hermes", rol:"Olímpico", epi:"El de las sandalias aladas", gen:"g4", padres:["zeus","maya"],
+ {id:"hermes", n:"Hermes", rol:"Olímpico", epi:"El de las sandalias aladas", gen:"g4", sexo:"m", padres:["zeus","maya"],
   r:"Mensajero, ladrón, guía de los muertos y patrón de los caminos. El día que nació ya había robado el ganado de Apolo e inventado la lira para pagarle."},
- {id:"dioniso", n:"Dioniso", rol:"Olímpico", epi:"El nacido dos veces", gen:"g4", padres:["zeus","semele"],
+ {id:"dioniso", n:"Dioniso", rol:"Olímpico", epi:"El nacido dos veces", gen:"g4", sexo:"m", padres:["zeus","semele"],
   r:"Rescatado del vientre de su madre fulminada y cosido al muslo de Zeus. Trae el vino, el éxtasis y el teatro, y destruye a quien niega su divinidad."},
- {id:"persefone", n:"Perséfone", rol:"Olímpica", epi:"Reina del inframundo", gen:"g4", padres:["zeus","demeter"], pareja:["hades"],
+ {id:"persefone", n:"Perséfone", rol:"Olímpica", epi:"Reina del inframundo", gen:"g4", sexo:"f", padres:["zeus","demeter"], pareja:["hades"],
   r:"Muchacha raptada y soberana temible a la vez. Los granos de granada que come la atan al mundo de abajo y reparten el año entre su madre y su esposo."},
- {id:"metis", n:"Metis", rol:"Oceánide", epi:"La astucia", gen:"g4", padres:["oceano","tetis-t"], pareja:["zeus"],
+ {id:"metis", n:"Metis", rol:"Oceánide", epi:"La astucia", gen:"g4", sexo:"f", padres:["oceano","tetis-t"], pareja:["zeus"],
   r:"Primera esposa de Zeus y quien le dio la pócima que hizo vomitar a Crono. Él la traga estando embarazada, y así la inteligencia queda dentro del poder."},
- {id:"maya", n:"Maya", rol:"Pléyade", epi:"La mayor de las Pléyades", gen:"g4", padres:["atlas"], pareja:["zeus"],
+ {id:"maya", n:"Maya", rol:"Pléyade", epi:"La mayor de las Pléyades", gen:"g4", sexo:"f", padres:["atlas"], pareja:["zeus"],
   r:"Hija de Atlas, vive apartada en una cueva de Arcadia. Madre de Hermes, a quien encuentra fuera de la cuna la misma noche en que lo dio a luz."},
- {id:"semele", n:"Sémele", rol:"Mortal", epi:"La princesa tebana", gen:"g4", padres:[], pareja:["zeus"],
+ {id:"semele", n:"Sémele", rol:"Mortal", epi:"La princesa tebana", gen:"g4", sexo:"f", padres:[], pareja:["zeus"],
   r:"Engañada por Hera, pide ver a Zeus en su forma verdadera y el rayo la calcina. Su hijo Dioniso la rescatará después del Hades y la hará inmortal."},
 
- {id:"perseo", n:"Perseo", rol:"Héroe", epi:"El matador de Medusa", gen:"g5", padres:["zeus","danae"],
+ {id:"perseo", n:"Perseo", rol:"Héroe", epi:"El matador de Medusa", gen:"g5", sexo:"m", padres:["zeus","danae"],
   r:"Concebido en una lluvia de oro dentro de una torre. Es el primer héroe de la estirpe de Zeus y el bisabuelo de Heracles: casi todos los linajes heroicos pasan por él."},
- {id:"danae", n:"Dánae", rol:"Mortal", epi:"La encerrada", gen:"g5", padres:[], pareja:["zeus"],
+ {id:"danae", n:"Dánae", rol:"Mortal", epi:"La encerrada", gen:"g5", sexo:"f", padres:[], pareja:["zeus"],
   r:"Su padre la aísla para evitar un oráculo y consigue justo lo contrario. Echada al mar en un arca con su hijo, sobrevive en la isla de Sérifos."},
- {id:"heracles", n:"Heracles", rol:"Héroe", epi:"La gloria de Hera", gen:"g5", padres:["zeus","alcmena"],
+ {id:"heracles", n:"Heracles", rol:"Héroe", epi:"La gloria de Hera", gen:"g5", sexo:"m", padres:["zeus","alcmena"],
   r:"El más fuerte y el más castigado. Sus doce trabajos limpian el mundo de monstruos, y tras morir por la túnica envenenada de Neso es el único mortal admitido entre los dioses."},
- {id:"alcmena", n:"Alcmena", rol:"Mortal", epi:"La reina de Tirinto", gen:"g5", padres:[], pareja:["zeus"],
+ {id:"alcmena", n:"Alcmena", rol:"Mortal", epi:"La reina de Tirinto", gen:"g5", sexo:"f", padres:[], pareja:["zeus"],
   r:"Zeus la visita con la forma de su marido y alarga la noche al triple. De ese engaño nace Heracles, y de la misma noche su hermano mortal Ificles."},
- {id:"helena", n:"Helena", rol:"Semidiosa", epi:"La de Esparta", gen:"g5", padres:["zeus","leda"],
+ {id:"helena", n:"Helena", rol:"Semidiosa", epi:"La de Esparta", gen:"g5", sexo:"f", padres:["zeus","leda"],
   r:"Nacida de un huevo tras la visita de Zeus en forma de cisne. Su fuga con Paris desata la guerra de Troya, aunque una versión sostiene que solo viajó allí un fantasma suyo."},
- {id:"leda", n:"Leda", rol:"Mortal", epi:"La reina de Esparta", gen:"g5", padres:[], pareja:["zeus"],
+ {id:"leda", n:"Leda", rol:"Mortal", epi:"La reina de Esparta", gen:"g5", sexo:"f", padres:[], pareja:["zeus"],
   r:"Madre de Helena y de los Dioscuros. Sus hijos nacen mezclados, unos mortales y otros divinos, según de quién sean esa misma noche."},
- {id:"minos", n:"Minos", rol:"Rey", epi:"El juez de los muertos", gen:"g5", padres:["zeus","europa"],
+ {id:"minos", n:"Minos", rol:"Rey", epi:"El juez de los muertos", gen:"g5", sexo:"m", padres:["zeus","europa"],
   r:"Rey de Creta y dueño del laberinto. Oculta al Minotauro nacido del castigo de Poseidón y termina, tras morir, juzgando a las almas en el inframundo."},
- {id:"europa", n:"Europa", rol:"Mortal", epi:"La raptada por el toro", gen:"g5", padres:[], pareja:["zeus"],
+ {id:"europa", n:"Europa", rol:"Mortal", epi:"La raptada por el toro", gen:"g5", sexo:"f", padres:[], pareja:["zeus"],
   r:"Princesa fenicia llevada a Creta a lomos de un toro blanco. Su nombre acabó designando todo un continente y su hermano Cadmo fundó Tebas buscándola."},
- {id:"teseo", n:"Teseo", rol:"Héroe", epi:"El sinoicista de Atenas", gen:"g5", padres:["poseidon"],
+ {id:"teseo", n:"Teseo", rol:"Héroe", epi:"El sinoicista de Atenas", gen:"g5", sexo:"m", padres:["poseidon"],
   r:"Hijo de un padre doble, Egeo y Poseidón. Mata al Minotauro, unifica el Ática y encarna al héroe convertido en rey y legislador."},
- {id:"aquiles", n:"Aquiles", rol:"Héroe", epi:"El de los pies ligeros", gen:"g5", padres:[],
+ {id:"aquiles", n:"Aquiles", rol:"Héroe", epi:"El de los pies ligeros", gen:"g5", sexo:"m", padres:[],
   r:"Hijo de Peleo y la nereida Tetis, invulnerable salvo en el talón. Elige a sabiendas la vida corta con gloria eterna sobre la larga y olvidada."},
- {id:"eneas", n:"Eneas", rol:"Héroe", epi:"El piadoso", gen:"g5", padres:["afrodita","anquises"],
+ {id:"eneas", n:"Eneas", rol:"Héroe", epi:"El piadoso", gen:"g5", sexo:"m", padres:["afrodita","anquises"],
   r:"Escapa de Troya en llamas cargando a su padre y llevando de la mano a su hijo. Su viaje hacia occidente convierte el final griego en el comienzo de Roma."},
- {id:"anquises", n:"Anquises", rol:"Mortal", epi:"El pastor del Ida", gen:"g5", padres:[], pareja:["afrodita"],
+ {id:"anquises", n:"Anquises", rol:"Mortal", epi:"El pastor del Ida", gen:"g5", sexo:"m", padres:[], pareja:["afrodita"],
   r:"Amado por Afrodita y advertido de no jactarse jamás de ello. Habló, y quedó lisiado; su hijo tendría que sacarlo a hombros de la ciudad en ruinas."},
- {id:"orfeo", n:"Orfeo", rol:"Héroe", epi:"El que amansa a las piedras", gen:"g5", padres:[],
+ {id:"orfeo", n:"Orfeo", rol:"Héroe", epi:"El que amansa a las piedras", gen:"g5", sexo:"m", padres:[],
   r:"Hijo de la musa Calíope. Su música detiene el remo de Caronte y conmueve a Hades, pero mira atrás a un paso de la salida y pierde a Eurídice para siempre."}
 ];
