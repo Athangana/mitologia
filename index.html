@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cronología y linajes — Mitología griega</title>
+<meta name="description" content="Cronología completa y árbol genealógico de la mitología griega, con reseñas de cada figura y episodio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,600&family=Spectral:wght@300;400;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --noche:#0E1620;
+  --noche-2:#16202B;
+  --noche-3:#1E2A37;
+  --marmol:#EDEAE3;
+  --marmol-suave:#A9B3BB;
+  --verdigris:#79B3A6;
+  --vino:#9E4A5F;
+  --linea:rgba(121,179,166,.22);
+  --display:"Bodoni Moda",Georgia,serif;
+  --cuerpo:"Spectral",Georgia,serif;
+  --util:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--noche);color:var(--marmol);
+  font-family:var(--cuerpo);font-weight:300;font-size:17px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--verdigris)}
+.wrap{max-width:820px;margin:0 auto;padding:0 20px}
+
+/* ---------- cabecera ---------- */
+.tapa{padding:56px 0 28px;text-align:center;position:relative}
+.tapa .eyebrow{font-family:var(--util);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--verdigris);margin:0 0 18px}
+.tapa h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,58px);line-height:1.02;margin:0;letter-spacing:-.01em}
+.tapa h1 em{font-style:italic;color:var(--verdigris)}
+.tapa p{color:var(--marmol-suave);max-width:44ch;margin:16px auto 0;font-size:16px}
+.greca{display:block;width:100%;height:22px;opacity:.55}
+.greca path{fill:none;stroke:var(--verdigris);stroke-width:1.4}
+
+/* ---------- navegación ---------- */
+nav.tabs{position:sticky;top:0;z-index:40;background:rgba(14,22,32,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--linea)}
+.tabs-in{display:flex;gap:6px;align-items:center;max-width:820px;margin:0 auto;padding:10px 20px}
+.tab{
+  appearance:none;background:none;border:1px solid transparent;color:var(--marmol-suave);
+  font-family:var(--util);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+  padding:9px 14px;border-radius:2px;cursor:pointer;transition:color .2s,border-color .2s,background .2s;
+}
+.tab:hover{color:var(--marmol)}
+.tab[aria-selected="true"]{color:var(--noche);background:var(--verdigris);border-color:var(--verdigris)}
+.buscar{margin-left:auto;position:relative;flex:0 1 190px}
+.buscar input{
+  width:100%;background:var(--noche-2);border:1px solid var(--linea);color:var(--marmol);
+  font-family:var(--util);font-size:12px;padding:9px 12px;border-radius:2px;
+}
+.buscar input::placeholder{color:#63707C}
+.buscar input:focus{outline:2px solid var(--verdigris);outline-offset:1px}
+
+/* ---------- vistas ---------- */
+.vista{display:none;padding:34px 0 90px}
+.vista.activa{display:block}
+.intro{color:var(--marmol-suave);font-size:15.5px;max-width:58ch;margin:0 0 34px}
+
+/* ---------- cronología: el hilo ---------- */
+.era{margin:0 0 10px}
+.era-tit{display:flex;align-items:baseline;gap:12px;margin:38px 0 20px}
+.era-num{font-family:var(--util);font-size:11px;letter-spacing:.2em;color:var(--vino);padding-top:4px}
+.era-tit h2{font-family:var(--display);font-weight:400;font-size:clamp(23px,5.5vw,32px);margin:0;line-height:1.15}
+.era-tit .sub{font-family:var(--util);font-size:11px;color:var(--marmol-suave);letter-spacing:.08em}
+
+.hilo{position:relative;margin:0;padding:0 0 0 34px;list-style:none}
+.hilo::before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:1px;background:linear-gradient(var(--verdigris),rgba(121,179,166,.15))}
+.nudo{position:relative;margin:0 0 4px}
+.nudo::before{
+  content:"";position:absolute;left:-29px;top:16px;width:9px;height:9px;border-radius:50%;
+  background:var(--noche);border:1.5px solid var(--verdigris);transition:background .2s,transform .2s;
+}
+.nudo.abierto::before{background:var(--verdigris);transform:scale(1.35)}
+.nudo-btn{
+  display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid rgba(255,255,255,.06);
+  color:var(--marmol);padding:12px 0;cursor:pointer;font-family:inherit;
+}
+.nudo-btn:focus-visible{outline:2px solid var(--verdigris);outline-offset:3px}
+.nudo-marca{font-family:var(--util);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--marmol-suave);display:block;margin-bottom:3px}
+.nudo-tit{font-family:var(--display);font-size:20px;font-weight:400;line-height:1.25}
+.nudo-cuerpo{overflow:hidden;max-height:0;transition:max-height .35s ease}
+.nudo.abierto .nudo-cuerpo{max-height:640px}
+.nudo-cuerpo p{margin:2px 0 18px;font-size:16px;color:#D2CFC8}
+.enlaces{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 18px}
+
+/* ---------- genealogía ---------- */
+.filtros{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 26px}
+.chip{
+  font-family:var(--util);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--noche-2);border:1px solid var(--linea);color:var(--marmol-suave);
+  padding:7px 11px;border-radius:2px;cursor:pointer;transition:all .18s;
+}
+.chip:hover{color:var(--marmol);border-color:var(--verdigris)}
+.chip[aria-pressed="true"]{background:var(--verdigris);color:var(--noche);border-color:var(--verdigris)}
+.chip.vinculo{text-transform:none;letter-spacing:.02em;font-size:12px;color:var(--verdigris)}
+
+.gen{margin:0 0 34px}
+.gen-tit{display:flex;align-items:center;gap:12px;margin:0 0 14px}
+.gen-tit h3{font-family:var(--util);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--vino);margin:0;white-space:nowrap}
+.gen-tit .rayita{height:1px;background:var(--linea);flex:1}
+.rejilla{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.ficha{
+  background:var(--noche-2);border:1px solid rgba(255,255,255,.05);border-left:2px solid transparent;
+  padding:12px 13px;text-align:left;cursor:pointer;color:var(--marmol);font-family:inherit;
+  transition:border-color .18s,background .18s,transform .18s;
+}
+.ficha:hover{background:var(--noche-3);border-left-color:var(--verdigris);transform:translateY(-1px)}
+.ficha:focus-visible{outline:2px solid var(--verdigris);outline-offset:2px}
+.ficha b{display:block;font-family:var(--display);font-weight:400;font-size:19px;line-height:1.2}
+.ficha span{display:block;font-family:var(--util);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--marmol-suave);margin-top:5px}
+
+/* ---------- panel de detalle ---------- */
+.velo{position:fixed;inset:0;background:rgba(6,10,15,.72);opacity:0;pointer-events:none;transition:opacity .25s;z-index:60}
+.velo.visible{opacity:1;pointer-events:auto}
+.panel{
+  position:fixed;z-index:70;background:var(--noche-2);border-top:2px solid var(--verdigris);
+  left:0;right:0;bottom:0;max-height:82vh;overflow-y:auto;padding:24px 22px 34px;
+  transform:translateY(101%);transition:transform .3s cubic-bezier(.2,.8,.3,1);
+}
+.panel.visible{transform:translateY(0)}
+.panel-cerrar{position:absolute;top:14px;right:16px;background:none;border:0;color:var(--marmol-suave);font-size:26px;line-height:1;cursor:pointer;padding:4px 8px}
+.panel-cerrar:hover{color:var(--marmol)}
+.panel .rol{font-family:var(--util);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--verdigris);margin:0 0 6px}
+.panel h2{font-family:var(--display);font-weight:400;font-size:33px;margin:0 0 2px;line-height:1.1}
+.panel .epi{font-style:italic;color:var(--marmol-suave);margin:0 0 16px;font-size:16px}
+.panel .resena{font-size:16.5px;color:#D8D5CE;margin:0 0 22px}
+.bloque{margin:0 0 16px}
+.bloque h4{font-family:var(--util);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--marmol-suave);margin:0 0 8px;font-weight:400}
+@media(min-width:760px){
+  .panel{left:auto;right:0;top:0;bottom:0;width:430px;max-height:none;border-top:0;border-left:2px solid var(--verdigris);transform:translateX(101%);padding-top:56px}
+  .panel.visible{transform:translateX(0)}
+}
+.vacio{color:var(--marmol-suave);font-family:var(--util);font-size:12px;padding:20px 0}
+
+footer{border-top:1px solid var(--linea);padding:26px 0 46px;color:#63707C;font-family:var(--util);font-size:11px;letter-spacing:.06em;text-align:center}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------- versión impresa (base para el ilustrador) ---------- */
+@media print{
+  body{background:#fff;color:#000;font-size:11pt}
+  nav.tabs,.buscar,.filtros,.velo,.panel,footer,.intro{display:none!important}
+  .vista{display:block!important;padding:0;page-break-before:always}
+  .nudo-cuerpo{max-height:none!important}
+  .hilo::before{background:#000}
+  .nudo::before{border-color:#000;background:#fff}
+  .ficha{border:1px solid #999;background:#fff;color:#000}
+  .greca path{stroke:#000}
+}
+</style>
+</head>
+<body>
+
+<svg class="greca" style="display:none"><defs>
+<pattern id="grecaPat" width="26" height="22" patternUnits="userSpaceOnUse">
+<path d="M0 20 H26 M3 20 V5 H20 V16 H9 V10 H15"/>
+</pattern></defs></svg>
+
+<header class="tapa">
+  <div class="wrap">
+    <p class="eyebrow">Anexo interactivo</p>
+    <h1>Cronología y <em>linajes</em><br>de los griegos</h1>
+    <p>El hilo completo del mito, desde el Caos hasta el regreso de los héroes, y quién engendró a quién. Toca cualquier nombre o episodio para leer su reseña.</p>
+  </div>
+</header>
+
+<svg class="greca" viewBox="0 0 1040 22" preserveAspectRatio="none" aria-hidden="true"><rect width="1040" height="22" fill="url(#grecaPat)"/></svg>
+
+<nav class="tabs">
+  <div class="tabs-in">
+    <button class="tab" id="tab-cronologia" role="tab" aria-selected="true" aria-controls="cronologia">Cronología</button>
+    <button class="tab" id="tab-arbol" role="tab" aria-selected="false" aria-controls="arbol">Genealogía</button>
+    <div class="buscar"><input id="q" type="search" placeholder="Buscar nombre…" aria-label="Buscar en la cronología y la genealogía"></div>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <section class="vista activa" id="cronologia" role="tabpanel" aria-labelledby="tab-cronologia">
+    <p class="intro">El mito griego no lleva fechas: lleva generaciones. Cada nudo del hilo es un episodio, y el orden entre ellos es lo único que los antiguos fijaron con certeza.</p>
+    <div id="lista-cronologia"></div>
+  </section>
+
+  <section class="vista" id="arbol" role="tabpanel" aria-labelledby="tab-arbol">
+    <p class="intro">Cuatro generaciones descienden del vacío inicial. Abre una ficha para ver su reseña, sus padres y su descendencia, y sigue el linaje tocando los nombres enlazados.</p>
+    <div class="filtros" id="filtros"></div>
+    <div id="lista-arbol"></div>
+  </section>
+
+</main>
+
+<footer>Anexo digital del libro · Última actualización: 2026</footer>
+
+<div class="velo" id="velo"></div>
+<aside class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panel-nombre" tabindex="-1">
+  <button class="panel-cerrar" id="cerrar" aria-label="Cerrar">×</button>
+  <p class="rol" id="panel-rol"></p>
+  <h2 id="panel-nombre"></h2>
+  <p class="epi" id="panel-epi"></p>
+  <p class="resena" id="panel-resena"></p>
+  <div class="bloque" id="bloque-padres"><h4>Padres</h4><div class="enlaces" id="panel-padres"></div></div>
+  <div class="bloque" id="bloque-pareja"><h4>Uniones</h4><div class="enlaces" id="panel-pareja"></div></div>
+  <div class="bloque" id="bloque-hijos"><h4>Descendencia</h4><div class="enlaces" id="panel-hijos"></div></div>
+</aside>
+
+<script src="datos.js"></script>
+<script>
+/* El contenido (eras, episodios y figuras) vive en datos.js.
+   Edita ese archivo; este de aquí abajo solo dibuja la página. */
+
+/* ==========================================================
+   MOTOR
+   ========================================================== */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const porId=Object.fromEntries(FIGURAS.map(f=>[f.id,f]));
+const hijosDe={};
+FIGURAS.forEach(f=>(f.padres||[]).forEach(p=>{(hijosDe[p]=hijosDe[p]||[]).push(f.id)}));
+
+/* --- cronología --- */
+const cont=$("#lista-cronologia");
+ERAS.forEach(era=>{
+  const eventos=CRONOLOGIA.filter(e=>e.era===era.id);
+  if(!eventos.length) return;
+  const sec=document.createElement("section");
+  sec.className="era";
+  sec.innerHTML=`<div class="era-tit"><span class="era-num">${era.num}</span>
+    <div><h2>${era.titulo}</h2><span class="sub">${era.sub}</span></div></div>
+    <ul class="hilo"></ul>`;
+  const ul=sec.querySelector(".hilo");
+  eventos.forEach(ev=>{
+    const li=document.createElement("li");
+    li.className="nudo";
+    li.dataset.busca=(ev.titulo+" "+ev.resena+" "+ev.marca).toLowerCase();
+    const vinculos=(ev.ver||[]).filter(v=>porId[v])
+      .map(v=>`<button class="chip vinculo" data-ir="${v}">${porId[v].n}</button>`).join("");
+    li.innerHTML=`<button class="nudo-btn" aria-expanded="false">
+        <span class="nudo-marca">${ev.marca}</span>
+        <span class="nudo-tit">${ev.titulo}</span></button>
+      <div class="nudo-cuerpo"><p>${ev.resena}</p>${vinculos?`<div class="enlaces">${vinculos}</div>`:""}</div>`;
+    li.querySelector(".nudo-btn").addEventListener("click",e=>{
+      const ab=li.classList.toggle("abierto");
+      e.currentTarget.setAttribute("aria-expanded",ab);
+    });
+    ul.appendChild(li);
+  });
+  cont.appendChild(sec);
+});
+
+/* --- genealogía --- */
+const filtros=$("#filtros");
+filtros.innerHTML=`<button class="chip" data-gen="todas" aria-pressed="true">Todas</button>`+
+  GENERACIONES.map(g=>`<button class="chip" data-gen="${g.id}" aria-pressed="false">${g.titulo}</button>`).join("");
+
+const listaArbol=$("#lista-arbol");
+GENERACIONES.forEach(g=>{
+  const miembros=FIGURAS.filter(f=>f.gen===g.id);
+  if(!miembros.length) return;
+  const sec=document.createElement("section");
+  sec.className="gen";sec.dataset.gen=g.id;
+  sec.innerHTML=`<div class="gen-tit"><h3>${g.titulo}</h3><span class="rayita"></span></div>
+    <div class="rejilla">${miembros.map(f=>
+      `<button class="ficha" data-ir="${f.id}" data-busca="${(f.n+" "+f.epi+" "+f.r).toLowerCase()}">
+        <b>${f.n}</b><span>${f.rol}</span></button>`).join("")}</div>`;
+  listaArbol.appendChild(sec);
+});
+
+filtros.addEventListener("click",e=>{
+  const b=e.target.closest(".chip");if(!b)return;
+  $$("#filtros .chip").forEach(c=>c.setAttribute("aria-pressed",c===b));
+  const g=b.dataset.gen;
+  $$(".gen").forEach(s=>s.style.display=(g==="todas"||s.dataset.gen===g)?"":"none");
+});
+
+/* --- panel de detalle --- */
+const panel=$("#panel"),velo=$("#velo");
+let ultimoFoco=null;
+function enlace(id){return `<button class="chip vinculo" data-ir="${id}">${porId[id]?porId[id].n:id}</button>`}
+function abrir(id){
+  const f=porId[id];if(!f)return;
+  $("#panel-rol").textContent=f.rol;
+  $("#panel-nombre").textContent=f.n;
+  $("#panel-epi").textContent=f.epi||"";
+  $("#panel-resena").textContent=f.r;
+  const set=(bloqueId,contId,ids)=>{
+    const lista=(ids||[]).filter(x=>porId[x]);
+    $(bloqueId).style.display=lista.length?"":"none";
+    $(contId).innerHTML=lista.map(enlace).join("");
+  };
+  set("#bloque-padres","#panel-padres",f.padres);
+  set("#bloque-pareja","#panel-pareja",f.pareja);
+  set("#bloque-hijos","#panel-hijos",hijosDe[f.id]);
+  panel.classList.add("visible");velo.classList.add("visible");
+  panel.scrollTop=0;panel.focus();
+  history.replaceState(null,"","#"+id);
+}
+function cerrar(){
+  panel.classList.remove("visible");velo.classList.remove("visible");
+  if(ultimoFoco)ultimoFoco.focus();
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-ir]");
+  if(b){ultimoFoco=b;abrir(b.dataset.ir);}
+});
+$("#cerrar").addEventListener("click",cerrar);
+velo.addEventListener("click",cerrar);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")cerrar()});
+
+/* --- pestañas --- */
+function verVista(id){
+  $$(".tab").forEach(t=>t.setAttribute("aria-selected",t.getAttribute("aria-controls")===id));
+  $$(".vista").forEach(v=>v.classList.toggle("activa",v.id===id));
+  window.scrollTo({top:0,behavior:"instant"});
+}
+$$(".tab").forEach(t=>t.addEventListener("click",()=>verVista(t.getAttribute("aria-controls"))));
+if(location.hash==="#arbol")verVista("arbol");
+
+/* --- búsqueda --- */
+$("#q").addEventListener("input",e=>{
+  const q=e.target.value.trim().toLowerCase();
+  $$(".nudo").forEach(n=>n.style.display=(!q||n.dataset.busca.includes(q))?"":"none");
+  $$(".ficha").forEach(f=>f.style.display=(!q||f.dataset.busca.includes(q))?"":"none");
+  $$(".gen").forEach(s=>{
+    const vis=[...s.querySelectorAll(".ficha")].some(f=>f.style.display!=="none");
+    s.style.display=vis?"":"none";
+  });
+  if(!q)$$("#filtros .chip")[0].click();
+});
+</script>
+</body>
+</html>
