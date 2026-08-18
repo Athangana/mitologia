@@ -119,41 +119,55 @@ nav.tabs{position:sticky;top:0;z-index:40;background:rgba(14,22,32,.92);backdrop
 .ficha span{display:block;font-family:var(--util);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--marmol-suave);margin-top:5px}
 
 /* ---------- genealogía: linaje con flechas ---------- */
-.leyenda{font-family:var(--util);font-size:10.5px;letter-spacing:.08em;color:#63707C;margin:0 0 22px;line-height:1.9}
+.leyenda{font-family:var(--util);font-size:10.5px;letter-spacing:.08em;color:#63707C;margin:0 0 20px;line-height:1.9}
 .leyenda b{color:var(--verdigris);font-weight:400}
+.acciones{display:flex;gap:7px;margin:0 0 22px}
+.acciones .chip{text-transform:none;letter-spacing:.04em}
+
 .tronco{list-style:none;margin:0;padding:0}
-.rama{list-style:none;margin:2px 0 10px;padding:0 0 0 17px;border-left:1px solid var(--linea)}
-.nodo-gen{position:relative;padding:3px 0}
+.rama{--guia:rgba(121,179,166,.34);list-style:none;margin:0;padding:0 0 0 26px}
+.nodo-gen{position:relative;padding:4px 0}
+/* la guía vertical de la rama, que se corta en el último hijo */
+.rama > .nodo-gen::before{content:"";position:absolute;left:-17px;top:0;bottom:0;width:1px;background:var(--guia)}
+.rama > .nodo-gen:last-child::before{bottom:auto;height:19px}
+/* el codo horizontal y su punta de flecha */
+.rama > .nodo-gen::after{content:"";position:absolute;left:-17px;top:19px;width:12px;height:1px;background:var(--guia)}
 .rama > .nodo-gen > .nodo-fila::before{
-  content:"";position:absolute;left:-17px;top:17px;width:11px;height:1px;background:var(--linea);
-}
-.rama > .nodo-gen > .nodo-fila::after{
-  content:"";position:absolute;left:-6px;top:13px;width:0;height:0;
+  content:"";position:absolute;left:-6px;top:15px;width:0;height:0;
   border-top:4px solid transparent;border-bottom:4px solid transparent;border-left:6px solid var(--verdigris);
 }
-.nodo-fila{display:flex;align-items:center;gap:9px;flex-wrap:wrap;min-height:30px}
+.nodo-fila{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:2px 6px 2px 0;border-radius:2px}
+.rama > .nodo-gen > .nodo-fila{padding-left:10px}
+.nodo-fila:hover{background:rgba(121,179,166,.06)}
 .brote{
-  flex:0 0 19px;width:19px;height:19px;padding:0;border-radius:2px;cursor:pointer;
-  background:var(--noche-2);border:1px solid var(--linea);color:var(--verdigris);
-  font-family:var(--util);font-size:12px;line-height:1;
+  flex:0 0 auto;align-self:center;padding:2px 7px;border-radius:2px;cursor:pointer;
+  background:none;border:1px solid var(--linea);color:var(--verdigris);
+  font-family:var(--util);font-size:10px;letter-spacing:.06em;line-height:1.4;white-space:nowrap;
 }
-.brote:hover{border-color:var(--verdigris);background:var(--noche-3)}
-.brote.hueco{visibility:hidden;cursor:default}
+.brote:hover{border-color:var(--verdigris);background:rgba(121,179,166,.1)}
 .nombre{
   background:none;border:0;padding:0;cursor:pointer;color:var(--marmol);
   font-family:var(--display);font-size:20px;line-height:1.2;border-bottom:1px solid transparent;
 }
 .nombre:hover{color:var(--verdigris);border-bottom-color:var(--verdigris)}
+.nodo-gen[data-nivel="0"] > .nodo-fila > .nombre{font-size:25px}
+.nodo-gen[data-nivel="1"] > .nodo-fila > .nombre{font-size:22px}
 .nodo-rol{font-family:var(--util);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#63707C}
-.union{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:1px 0 1px 28px}
-.rel{font-family:var(--util);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--marmol-suave)}
-.rel .glifo{color:var(--verdigris);letter-spacing:0}
-.prole{margin:5px 0 0}
-.prole > .rel{display:block;margin:0 0 2px 28px;color:var(--vino)}
-.union .enlaces,.prole .enlaces,.mini .enlaces{margin:0}
-.nodo-gen.cerrado > .prole{display:none}
-.acciones{display:flex;gap:7px;margin:0 0 18px}
-.acciones .chip{text-transform:none;letter-spacing:.04em}
+.rel{font-family:var(--util);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--marmol-suave)}
+.rel .glifo{color:var(--verdigris);letter-spacing:0;margin-right:5px}
+.par{font-family:var(--cuerpo);font-size:15px;color:var(--marmol-suave)}
+.cuenta{font-family:var(--util);font-size:10px;letter-spacing:.06em;color:var(--vino)}
+.enlace{
+  background:none;border:0;padding:0;cursor:pointer;color:var(--verdigris);
+  font-family:var(--cuerpo);font-size:15px;border-bottom:1px dotted rgba(121,179,166,.5);
+}
+.enlace:hover{color:var(--marmol);border-bottom-style:solid}
+.resumen{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.nodo-gen:not(.cerrado) > .nodo-fila > .resumen{display:none}
+.union-fila{margin:2px 0 6px}
+.union-fila > .titulo{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;padding:3px 0 5px}
+.nodo-gen.cerrado > .detalle{display:none}
+.mini .enlaces{margin:0}
 
 /* ---------- panel de detalle ---------- */
 .velo{position:fixed;inset:0;background:rgba(6,10,15,.72);opacity:0;pointer-events:none;transition:opacity .25s;z-index:60}
@@ -208,11 +222,12 @@ footer{border-top:1px solid var(--linea);padding:26px 0 46px;color:#63707C;font-
   .ficha{border:1px solid #999;background:#fff;color:#000}
   .greca path{stroke:#000}
   #lista-linaje[hidden]{display:block!important}
-  .nodo-gen.cerrado > .prole{display:block!important}
-  .rama{border-left-color:#999}
-  .rama > .nodo-gen > .nodo-fila::before{background:#999}
-  .rama > .nodo-gen > .nodo-fila::after{border-left-color:#000}
-  .nombre,.mini-yo{color:#000}
+  .nodo-gen.cerrado > .detalle{display:block!important}
+  .resumen{display:none!important}
+  .rama > .nodo-gen::before,.rama > .nodo-gen::after{background:#999}
+  .rama > .nodo-gen > .nodo-fila::before{border-left-color:#000}
+  .nombre,.mini-yo,.enlace{color:#000}
+  .nodo-fila:hover{background:none}
   .nodo-gen{page-break-inside:avoid}
 }
 </style>
@@ -261,7 +276,7 @@ footer{border-top:1px solid var(--linea);padding:26px 0 46px;color:#63707C;font-
     <div id="lista-arbol"></div>
 
     <div id="lista-linaje" hidden>
-      <p class="leyenda"><b>▸</b> desciende de la figura de arriba &nbsp;·&nbsp; <b>⇄</b> unión &nbsp;·&nbsp; <b>↳</b> descendencia &nbsp;·&nbsp; <b>+</b> despliega una rama</p>
+      <p class="leyenda"><b>⚭</b> unión &nbsp;·&nbsp; <b>▸</b> desciende de la figura de arriba &nbsp;·&nbsp; el botón de la derecha abre y cierra cada rama &nbsp;·&nbsp; toca un nombre para leer su reseña</p>
       <div class="acciones">
         <button class="chip" id="abrir-todo">Desplegar todo</button>
         <button class="chip" id="cerrar-todo">Plegar todo</button>
@@ -454,26 +469,82 @@ filtros.addEventListener("click",e=>{
 /* ==========================================================
    GENEALOGÍA · linaje con flechas
    ========================================================== */
-function ramaHTML(id,nivel,vistos){
+/* Una figura = una sola línea. Debajo, una línea por unión con su
+   descendencia colgando; las figuras sin descendencia no se despliegan
+   y llevan su unión en la misma línea. */
+function filasDe(f){
+  const conHijos=gruposHijos(f.id,cuelgaDe),filas=[],colocados=new Set();
+  gruposUnion(f).forEach(g=>g.ids.forEach(id=>{
+    const gh=conHijos.find(x=>x.con===id);
+    if(gh) colocados.add(id);
+    filas.push({rel:g.rel,con:id,hijos:gh?gh.hijos:[]});
+  }));
+  conHijos.forEach(gh=>{if(!colocados.has(gh.con)) filas.push({rel:"",con:gh.con,hijos:gh.hijos})});
+  return filas;
+}
+function union(fila){
+  return `<span class="rel"><span class="glifo">⚭</span>${fila.rel}</span>
+    <button class="enlace" data-ir="${fila.con}">${porId[fila.con].n}</button>`;
+}
+/* Un matrimonio entre hermanos ocuparía dos renglones seguidos diciendo
+   lo mismo al revés. Cuando la pareja tiene hijos en común y el cónyuge
+   no arrastra otra unión, los dos comparten la línea que encabeza la rama. */
+function repartirConyuges(ids){
+  const dentro=new Set(),salida=[];
+  ids.forEach(a=>{
+    if(dentro.has(a)) return;
+    const conProle=filasDe(porId[a]).filter(x=>x.hijos.length).map(x=>x.con);
+    const fus=(unionesDe[a]||[]).filter(b=>
+      b!==a && conProle.includes(b) && ids.indexOf(b)>ids.indexOf(a) && !dentro.has(b) &&
+      (unionesDe[b]||[]).length===1 && !filasDe(porId[b]).some(x=>x.hijos.length));
+    fus.forEach(b=>dentro.add(b));
+    salida.push({id:a,fus});
+  });
+  return salida;
+}
+function ramaListaHTML(ids,nivel,vistos){
+  return `<ul class="rama">${repartirConyuges(ids).map(o=>
+    ramaHTML(o.id,nivel,vistos,o.fus.map(b=>textoBusca(porId[b])).join(" "))).join("")}</ul>`;
+}
+function ramaHTML(id,nivel,vistos,extra){
   const f=porId[id];
   if(!f||vistos.has(id)) return "";
   vistos.add(id);
-  const grupos=gruposHijos(id,cuelgaDe);
+  const filas=filasDe(f);
+  const todos=filas.flatMap(x=>x.hijos);
+  const busca=textoBusca(f)+(extra?" "+extra:"");
+  const cabecera=`<button class="nombre" data-ir="${id}">${f.n}</button>
+    <span class="nodo-rol">${f.rol}</span>`;
+
+  if(!todos.length) return `<li class="nodo-gen" data-nivel="${nivel}" data-busca="${busca}">
+    <div class="nodo-fila">${cabecera}${filas.map(union).join(" ")}</div></li>`;
+
+  const cuenta=`${todos.length} ${palHijos(todos,"")}`;
   const abierto=nivel<2;
-  const uniones=gruposUnion(f).map(g=>
-    `<div class="union"><span class="rel"><span class="glifo">⇄</span> ${g.rel}</span>
-      <div class="enlaces">${g.ids.map(enlace).join("")}</div></div>`).join("");
-  const prole=grupos.map(g=>
-    `<div class="prole"><span class="rel"><span class="glifo">↳</span> ${palHijos(g.hijos,g.con)}</span>
-      <ul class="rama">${g.hijos.map(h=>ramaHTML(h,nivel+1,vistos)).join("")}</ul></div>`).join("");
-  return `<li class="nodo-gen${abierto?"":" cerrado"}" data-nivel="${nivel}" data-busca="${textoBusca(f)}">
-    <div class="nodo-fila">
-      ${grupos.length
-        ? `<button class="brote" aria-expanded="${abierto}" aria-label="Desplegar la descendencia de ${f.n}">${abierto?"−":"+"}</button>`
-        : `<span class="brote hueco" aria-hidden="true"></span>`}
-      <button class="nombre" data-ir="${id}">${f.n}</button>
-      <span class="nodo-rol">${f.rol}</span>
-    </div>${uniones}${prole}</li>`;
+  const parejas=filas.filter(x=>x.rel).map(x=>x.con);
+  /* si solo hay un grupo y nadie con quien emparejarlo, el rótulo
+     repetiría lo que ya dice el botón: mejor que cuelguen sin más */
+  const soloUno=filas.length===1&&!filas[0].rel;
+  const detalle=filas.map(fila=>{
+    const n=fila.hijos.length;
+    const titulo=fila.rel
+      ? `${union(fila)}${n?`<span class="cuenta">${n} ${palHijos(fila.hijos,"")}</span>`:""}`
+      : `<span class="rel"><span class="glifo">↳</span>${n>1?n+" ":""}${palHijos(fila.hijos,fila.con)}</span>`;
+    return `<div class="union-fila">${soloUno?"":`<div class="titulo">${titulo}</div>`}
+      ${n?ramaListaHTML(fila.hijos,nivel+1,vistos):""}</div>`;
+  }).join("");
+
+  return `<li class="nodo-gen${abierto?"":" cerrado"}" data-nivel="${nivel}" data-busca="${busca}">
+    <div class="nodo-fila">${cabecera}
+      <span class="resumen">${parejas.length
+        ? `<span class="rel"><span class="glifo">⚭</span></span>`+
+          parejas.slice(0,2).map(p=>`<button class="enlace" data-ir="${p}">${porId[p].n}</button>`).join(" ")+
+          (parejas.length>2?`<span class="par">y ${parejas.length-2} más</span>`:"")
+        : ""}</span>
+      <button class="brote" data-cuenta="${cuenta}" aria-expanded="${abierto}"
+        aria-label="Descendencia de ${f.n}">${abierto?"▾ plegar":"▸ "+cuenta}</button>
+    </div>
+    <div class="detalle">${detalle}</div></li>`;
 }
 
 const vistos=new Set();
@@ -490,7 +561,7 @@ $("#linaje-cuerpo").innerHTML=
 function abrirNodo(n,ab){
   n.classList.toggle("cerrado",!ab);
   const b=n.querySelector(":scope > .nodo-fila > button.brote");
-  if(b){b.setAttribute("aria-expanded",ab);b.textContent=ab?"−":"+"}
+  if(b){b.setAttribute("aria-expanded",ab);b.textContent=ab?"▾ plegar":"▸ "+b.dataset.cuenta}
 }
 $("#linaje-cuerpo").addEventListener("click",e=>{
   const b=e.target.closest("button.brote");if(!b)return;
@@ -526,7 +597,7 @@ function parentescoHTML(f){
   }
   partes.push(`<div class="mini-yo">${f.n}</div>`);
   gruposUnion(f).forEach(g=>partes.push(
-    `<div class="mini-union"><span class="rel"><span class="glifo">⇄</span> ${g.rel}</span>
+    `<div class="mini-union"><span class="rel"><span class="glifo">⚭</span>${g.rel}</span>
       <div class="enlaces">${g.ids.map(enlace).join("")}</div></div>`));
   const grupos=gruposHijos(f.id,hijosDe);
   if(grupos.length){
