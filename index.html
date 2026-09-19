@@ -146,12 +146,65 @@ footer{border-top:1px solid var(--linea);padding:26px 0 46px;color:#63707C;font-
 
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
+
+/* ---------- diagrama de familia ---------- */
+.modos{margin-bottom:18px}
+.migas{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:0 0 14px;min-height:24px}
+.miga{background:none;border:0;color:var(--marmol-suave);font-family:var(--util);font-size:11px;letter-spacing:.06em;cursor:pointer;padding:3px 0}
+.miga:hover{color:var(--verdigris)}
+.miga+.miga::before{content:"›";margin:0 7px;color:#4A5661}
+
+.diagrama{margin:0 0 26px}
+.nivel{margin:0 0 4px}
+.nivel-tit{font-family:var(--util);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#5E6B77;margin:0 0 10px}
+.fila{display:flex;gap:18px;align-items:flex-start;position:relative;padding:0 2px}
+.fila.centrada{justify-content:center}
+.fila.desliza{overflow-x:auto;overflow-y:hidden;padding-bottom:6px;scrollbar-width:thin}
+.fila.desliza::-webkit-scrollbar{height:4px}
+.fila.desliza::-webkit-scrollbar-thumb{background:var(--linea);border-radius:2px}
+
+.nodo{
+  flex:0 0 auto;width:104px;background:none;border:0;padding:0;cursor:pointer;
+  color:var(--marmol);font-family:inherit;text-align:center;position:relative;
+}
+.nodo:focus-visible{outline:2px solid var(--verdigris);outline-offset:4px;border-radius:8px}
+.disco{
+  width:66px;height:66px;margin:0 auto 9px;border-radius:50%;
+  background:var(--noche-2);border:1px solid var(--linea);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);font-size:26px;color:var(--marmol-suave);
+  transition:border-color .2s,color .2s,transform .2s;
+}
+.nodo:hover .disco{border-color:var(--verdigris);color:var(--marmol);transform:translateY(-2px)}
+.nodo b{display:block;font-family:var(--display);font-weight:400;font-size:16px;line-height:1.15;letter-spacing:.01em}
+.nodo i{display:block;font-style:normal;font-family:var(--util);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:#6C7883;margin-top:4px}
+.nodo.foco .disco{border-color:var(--verdigris);border-width:2px;color:var(--verdigris);background:rgba(121,179,166,.08)}
+.nodo.foco b{color:var(--verdigris)}
+.nodo.grupo .disco{border-style:dashed}
+
+/* uniones y descendencia */
+.union{display:flex;align-items:flex-start;gap:0;justify-content:center}
+.lazo{align-self:flex-start;margin-top:33px;height:1px;width:26px;background:var(--verdigris);flex:0 0 26px}
+.bajada{width:1px;height:24px;background:var(--linea);margin:0 auto}
+.barra{position:relative;height:1px;background:var(--linea);margin:0 auto 0}
+.colgante{width:1px;height:16px;background:var(--linea);margin:0 auto 10px}
+.sin{font-family:var(--util);font-size:11px;color:#5E6B77;text-align:center;padding:6px 0 2px}
+
+/* ficha del foco, bajo el diagrama */
+.tarjeta-foco{border-top:1px solid var(--linea);padding-top:22px}
+.tarjeta-foco .rol{font-family:var(--util);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--verdigris);margin:0 0 6px}
+.tarjeta-foco h2{font-family:var(--display);font-weight:400;font-size:31px;margin:0 0 2px;line-height:1.1}
+.tarjeta-foco .epi{font-style:italic;color:var(--marmol-suave);margin:0 0 16px;font-size:16px}
+.tarjeta-foco .resena{font-size:16.5px;color:#D8D5CE;margin:0 0 20px}
+
 /* ---------- versión impresa (base para el ilustrador) ---------- */
 @media print{
   body{background:#fff;color:#000;font-size:11pt}
   nav.tabs,.buscar,.filtros,.velo,.panel,footer,.intro{display:none!important}
   .vista{display:block!important;padding:0;page-break-before:always}
   .nudo-cuerpo{max-height:none!important}
+  .disco{border-color:#666;color:#000}
+  .nodo b,.nodo i{color:#000}
   .variantes{border-left-color:#999}
   .variantes p{color:#444}
   .hilo::before{background:#000}
@@ -194,9 +247,22 @@ footer{border-top:1px solid var(--linea);padding:26px 0 46px;color:#63707C;font-
   </section>
 
   <section class="vista" id="arbol" role="tabpanel" aria-labelledby="tab-arbol">
-    <p class="intro">Cuatro generaciones descienden del vacío inicial. Abre una ficha para ver su reseña, sus padres y su descendencia, y sigue el linaje tocando los nombres enlazados.</p>
-    <div class="filtros" id="filtros"></div>
-    <div id="lista-arbol"></div>
+    <p class="intro">El árbol se recorre de una familia a la vez: arriba los padres, al centro la unión y abajo la descendencia. Toca cualquier círculo para moverte hasta él.</p>
+    <div class="filtros modos">
+      <button class="chip" data-modo="diagrama" aria-pressed="true">Diagrama</button>
+      <button class="chip" data-modo="indice" aria-pressed="false">Índice completo</button>
+    </div>
+
+    <div id="modo-diagrama">
+      <div class="migas" id="migas"></div>
+      <div class="diagrama" id="diagrama"></div>
+      <article class="tarjeta-foco" id="tarjeta-foco"></article>
+    </div>
+
+    <div id="modo-indice" hidden>
+      <div class="filtros" id="filtros"></div>
+      <div id="lista-arbol"></div>
+    </div>
   </section>
 
 </main>
@@ -307,6 +373,7 @@ function abrir(id){
   panel.classList.add("visible");velo.classList.add("visible");
   panel.scrollTop=0;panel.focus();
   history.replaceState(null,"","#"+id);
+  if(typeof pintaDiagrama==="function"&&porId[id]) pintaDiagrama(id);
 }
 function cerrar(){
   panel.classList.remove("visible");velo.classList.remove("visible");
@@ -319,6 +386,87 @@ document.addEventListener("click",e=>{
 $("#cerrar").addEventListener("click",cerrar);
 velo.addEventListener("click",cerrar);
 document.addEventListener("keydown",e=>{if(e.key==="Escape")cerrar()});
+
+
+/* --- diagrama de familia --- */
+const dia=$("#diagrama"), tarjeta=$("#tarjeta-foco"), migas=$("#migas");
+let foco=null, ruta=[];
+
+const parejasDe=id=>{
+  const f=porId[id]||{}; const s=new Set(f.pareja||[]);
+  FIGURAS.forEach(o=>{ if((o.pareja||[]).includes(id)) s.add(o.id); });
+  // quien comparte hijos tambien es pareja a efectos del dibujo
+  FIGURAS.forEach(o=>{ if((o.padres||[]).includes(id)) (o.padres||[]).forEach(p=>{ if(p!==id) s.add(p); }); });
+  return [...s].filter(x=>porId[x]);
+};
+const inicial=f=>(f.n.replace(/^(Los|Las)\s+/,"")[0]||"·").toUpperCase();
+
+function nodo(id,clase){
+  const f=porId[id]; if(!f) return "";
+  const grupo=/^(Los|Las)\s/.test(f.n)?" grupo":"";
+  return `<button class="nodo${clase||""}${grupo}" data-foco="${id}" title="${f.n}">
+    <span class="disco">${inicial(f)}</span><b>${f.n}</b><i>${f.rol}</i></button>`;
+}
+
+function pintaDiagrama(id){
+  const f=porId[id]; if(!f) return;
+  foco=id;
+  const padres=(f.padres||[]).filter(p=>porId[p]);
+  const parejas=parejasDe(id);
+  const hijos=[...new Set([].concat(hijosDe[id]||[], ...parejas.map(p=>hijosDe[p]||[])))].filter(x=>porId[x]);
+
+  let html="";
+  if(padres.length){
+    html+=`<div class="nivel"><p class="nivel-tit">${padres.length>1?"Padres":"Origen"}</p>
+      <div class="fila centrada">${padres.map((p,i)=>nodo(p)+(i<padres.length-1?'<div class="lazo"></div>':"")).join("")}</div>
+      <div class="bajada"></div></div>`;
+  }
+  html+=`<div class="nivel"><p class="nivel-tit">${parejas.length?"Unión":"Figura"}</p>
+    <div class="fila centrada">${[id,...parejas].map((p,i,a)=>nodo(p,i===0?" foco":"")+(i<a.length-1?'<div class="lazo"></div>':"")).join("")}</div></div>`;
+
+  if(hijos.length){
+    html+=`<div class="nivel"><p class="nivel-tit" style="margin:16px 0 10px">Descendencia · ${hijos.length}</p>
+      <div class="bajada"></div><div class="barra" id="barra"></div>
+      <div class="fila desliza" id="fila-hijos">${hijos.map(x=>'<div><div class="colgante"></div>'+nodo(x)+"</div>").join("")}</div></div>`;
+  }else{
+    html+=`<p class="sin">Sin descendencia registrada</p>`;
+  }
+  dia.innerHTML=html;
+
+  // la barra de hermanos se mide despues de dibujar
+  const fila=$("#fila-hijos"), barra=$("#barra");
+  if(fila&&barra){
+    const n=fila.children.length;
+    if(n<2){barra.style.display="none"}
+    else{
+      const a=fila.children[0].getBoundingClientRect(), b=fila.children[n-1].getBoundingClientRect();
+      const base=fila.getBoundingClientRect();
+      const x1=a.left-base.left+fila.scrollLeft+a.width/2, x2=b.left-base.left+fila.scrollLeft+b.width/2;
+      barra.style.width=(x2-x1)+"px"; barra.style.marginLeft=x1+"px";
+    }
+  }
+
+  tarjeta.innerHTML=`<p class="rol">${f.rol}</p><h2>${f.n}</h2>
+    ${f.epi?`<p class="epi">${f.epi}</p>`:""}
+    <p class="resena">${f.r}</p>
+    ${f.v?`<div class="bloque variantes"><h4>Variantes y fuentes</h4><p>${f.v}</p></div>`:""}`;
+
+  ruta=ruta.filter(x=>x!==id); ruta.push(id); if(ruta.length>6) ruta.shift();
+  migas.innerHTML=ruta.map(x=>`<button class="miga" data-foco="${x}">${porId[x].n}</button>`).join("");
+  history.replaceState(null,"","#"+id);
+}
+
+dia.addEventListener("click",e=>{const b=e.target.closest("[data-foco]");if(b)pintaDiagrama(b.dataset.foco)});
+migas.addEventListener("click",e=>{const b=e.target.closest("[data-foco]");if(b)pintaDiagrama(b.dataset.foco)});
+
+$$(".modos .chip").forEach(c=>c.addEventListener("click",()=>{
+  $$(".modos .chip").forEach(o=>o.setAttribute("aria-pressed",o===c));
+  const dg=c.dataset.modo==="diagrama";
+  $("#modo-diagrama").hidden=!dg; $("#modo-indice").hidden=dg;
+  if(dg) pintaDiagrama(foco||"gea");
+}));
+
+pintaDiagrama("gea");
 
 /* --- pestañas --- */
 function verVista(id){
