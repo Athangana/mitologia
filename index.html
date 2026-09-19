@@ -149,53 +149,73 @@ footer{border-top:1px solid var(--linea);padding:26px 0 46px;color:#63707C;font-
 
 /* ---------- diagrama de familia ---------- */
 .modos{margin-bottom:18px}
-.migas{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:0 0 14px;min-height:24px}
-.miga{background:none;border:0;color:var(--marmol-suave);font-family:var(--util);font-size:11px;letter-spacing:.06em;cursor:pointer;padding:3px 0}
+.migas{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:0 0 16px;min-height:22px}
+.miga{background:none;border:0;color:var(--marmol-suave);font-family:var(--util);font-size:11px;cursor:pointer;padding:3px 0}
 .miga:hover{color:var(--verdigris)}
-.miga+.miga::before{content:"›";margin:0 7px;color:#4A5661}
+.miga+.miga::before{content:"\203A";margin:0 7px;color:#4A5661}
 
-.diagrama{margin:0 0 26px}
-.nivel{margin:0 0 4px}
-.nivel-tit{font-family:var(--util);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#5E6B77;margin:0 0 10px}
-.fila{display:flex;gap:18px;align-items:flex-start;position:relative;padding:0 2px}
-.fila.centrada{justify-content:center}
-.fila.desliza{overflow-x:auto;overflow-y:hidden;padding-bottom:6px;scrollbar-width:thin}
+.nivel-tit{font-family:var(--util);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#5E6B77;margin:0 0 12px}
+.fila{display:flex;gap:16px;align-items:flex-start;justify-content:center}
+.fila.desliza{justify-content:flex-start;overflow-x:auto;overflow-y:hidden;padding-bottom:8px;scrollbar-width:thin}
 .fila.desliza::-webkit-scrollbar{height:4px}
 .fila.desliza::-webkit-scrollbar-thumb{background:var(--linea);border-radius:2px}
 
-.nodo{
-  flex:0 0 auto;width:104px;background:none;border:0;padding:0;cursor:pointer;
-  color:var(--marmol);font-family:inherit;text-align:center;position:relative;
-}
+.nodo{flex:0 0 auto;width:102px;background:none;border:0;padding:0;cursor:pointer;color:var(--marmol);font-family:inherit;text-align:center}
 .nodo:focus-visible{outline:2px solid var(--verdigris);outline-offset:4px;border-radius:8px}
-.disco{
-  width:66px;height:66px;margin:0 auto 9px;border-radius:50%;
-  background:var(--noche-2);border:1px solid var(--linea);
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--display);font-size:26px;color:var(--marmol-suave);
-  transition:border-color .2s,color .2s,transform .2s;
-}
+.disco{width:62px;height:62px;margin:0 auto 9px;border-radius:50%;background:var(--noche-2);border:1px solid var(--linea);
+  display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:25px;color:var(--marmol-suave);
+  transition:border-color .2s,color .2s,transform .2s}
 .nodo:hover .disco{border-color:var(--verdigris);color:var(--marmol);transform:translateY(-2px)}
-.nodo b{display:block;font-family:var(--display);font-weight:400;font-size:16px;line-height:1.15;letter-spacing:.01em}
+.nodo b{display:block;font-family:var(--display);font-weight:400;font-size:16px;line-height:1.15}
 .nodo i{display:block;font-style:normal;font-family:var(--util);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:#6C7883;margin-top:4px}
-.nodo.foco .disco{border-color:var(--verdigris);border-width:2px;color:var(--verdigris);background:rgba(121,179,166,.08)}
-.nodo.foco b{color:var(--verdigris)}
 .nodo.grupo .disco{border-style:dashed}
+.nodo.foco{width:130px}
+.nodo.foco .disco{width:84px;height:84px;font-size:34px;border-color:var(--verdigris);border-width:2px;color:var(--verdigris);background:rgba(121,179,166,.08)}
+.nodo.foco b{color:var(--verdigris);font-size:20px}
 
-/* uniones y descendencia */
-.union{display:flex;align-items:flex-start;gap:0;justify-content:center}
-.lazo{align-self:flex-start;margin-top:33px;height:1px;width:26px;background:var(--verdigris);flex:0 0 26px}
-.bajada{width:1px;height:24px;background:var(--linea);margin:0 auto}
-.barra{position:relative;height:1px;background:var(--linea);margin:0 auto 0}
-.colgante{width:1px;height:16px;background:var(--linea);margin:0 auto 10px}
-.sin{font-family:var(--util);font-size:11px;color:#5E6B77;text-align:center;padding:6px 0 2px}
+.lazo{align-self:flex-start;margin-top:31px;height:1px;width:24px;background:var(--verdigris);flex:0 0 24px}
+.bajada{width:1px;height:26px;background:var(--linea);margin:0 auto}
+.barra{height:1px;background:var(--linea)}
+.colgante{width:1px;height:18px;background:var(--linea);margin:0 auto 10px}
+.sin{font-family:var(--util);font-size:11px;color:#5E6B77;text-align:center;padding:10px 0}
 
-/* ficha del foco, bajo el diagrama */
-.tarjeta-foco{border-top:1px solid var(--linea);padding-top:22px}
+/* ramas plegables por unión */
+.rama{border-top:1px solid rgba(255,255,255,.06);margin-top:18px;padding-top:14px}
+.rama-cab{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;color:var(--marmol);
+  font-family:inherit;text-align:left;cursor:pointer;padding:4px 0}
+.rama-cab:focus-visible{outline:2px solid var(--verdigris);outline-offset:3px}
+.signo{flex:0 0 22px;width:22px;height:22px;border:1px solid var(--verdigris);border-radius:2px;color:var(--verdigris);
+  display:flex;align-items:center;justify-content:center;font-family:var(--util);font-size:14px;line-height:1}
+.rama-cab .con{font-family:var(--util);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#6C7883;display:block}
+.rama-cab .quien{font-family:var(--display);font-size:19px;display:block;line-height:1.2}
+.rama-cab .cuenta{margin-left:auto;font-family:var(--util);font-size:11px;color:var(--marmol-suave)}
+.rama-cuerpo{display:none;padding-top:8px}
+.rama.abierta .rama-cuerpo{display:block}
+.pareja-mini{display:flex;justify-content:center;padding:6px 0 0}
+
+.tarjeta-foco{border-top:1px solid var(--linea);padding-top:22px;margin-top:26px}
 .tarjeta-foco .rol{font-family:var(--util);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--verdigris);margin:0 0 6px}
 .tarjeta-foco h2{font-family:var(--display);font-weight:400;font-size:31px;margin:0 0 2px;line-height:1.1}
 .tarjeta-foco .epi{font-style:italic;color:var(--marmol-suave);margin:0 0 16px;font-size:16px}
 .tarjeta-foco .resena{font-size:16.5px;color:#D8D5CE;margin:0 0 20px}
+
+/* ---------- adaptación a tablet y escritorio ---------- */
+@media(min-width:700px){
+  .nodo{width:118px}
+  .disco{width:70px;height:70px;font-size:28px}
+  .nodo.foco{width:150px}
+  .nodo.foco .disco{width:96px;height:96px;font-size:38px}
+  .fila{gap:22px}
+  .rejilla{grid-template-columns:repeat(auto-fill,minmax(175px,1fr))}
+}
+@media(min-width:1040px){
+  .wrap,.tabs-in{max-width:1080px}
+  .intro,.nudo-cuerpo p,.era-tit{max-width:64ch}
+  #modo-diagrama{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);gap:40px;align-items:start}
+  #migas{grid-column:1/-1}
+  .tarjeta-foco{border-top:0;border-left:1px solid var(--linea);padding:4px 0 0 32px;margin-top:0;position:sticky;top:78px}
+  .tarjeta-foco h2{font-size:34px}
+}
 
 /* ---------- versión impresa (base para el ilustrador) ---------- */
 @media print{
@@ -392,59 +412,69 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")cerrar()});
 const dia=$("#diagrama"), tarjeta=$("#tarjeta-foco"), migas=$("#migas");
 let foco=null, ruta=[];
 
-const parejasDe=id=>{
-  const f=porId[id]||{}; const s=new Set(f.pareja||[]);
-  FIGURAS.forEach(o=>{ if((o.pareja||[]).includes(id)) s.add(o.id); });
-  // quien comparte hijos tambien es pareja a efectos del dibujo
-  FIGURAS.forEach(o=>{ if((o.padres||[]).includes(id)) (o.padres||[]).forEach(p=>{ if(p!==id) s.add(p); }); });
-  return [...s].filter(x=>porId[x]);
-};
-const inicial=f=>(f.n.replace(/^(Los|Las)\s+/,"")[0]||"·").toUpperCase();
+const esGrupo=f=>/^(Los|Las)\s/.test(f.n);
+const inicial=f=>(f.n.replace(/^(Los|Las)\s+/,"")[0]||"\u00b7").toUpperCase();
 
 function nodo(id,clase){
   const f=porId[id]; if(!f) return "";
-  const grupo=/^(Los|Las)\s/.test(f.n)?" grupo":"";
-  return `<button class="nodo${clase||""}${grupo}" data-foco="${id}" title="${f.n}">
+  return `<button class="nodo${clase||""}${esGrupo(f)?" grupo":""}" data-foco="${id}" title="${f.n}">
     <span class="disco">${inicial(f)}</span><b>${f.n}</b><i>${f.rol}</i></button>`;
+}
+
+/* agrupa la descendencia del foco segun con quien la tuvo */
+function ramasDe(id){
+  const mapa=new Map();
+  (hijosDe[id]||[]).forEach(c=>{
+    const otro=(porId[c].padres||[]).find(p=>p!==id&&porId[p])||"__solo";
+    if(!mapa.has(otro)) mapa.set(otro,[]);
+    mapa.get(otro).push(c);
+  });
+  // uniones declaradas que no dejaron descendencia registrada
+  const decl=new Set(porId[id].pareja||[]);
+  FIGURAS.forEach(o=>{ if((o.pareja||[]).includes(id)) decl.add(o.id); });
+  decl.forEach(p=>{ if(porId[p]&&!mapa.has(p)) mapa.set(p,[]); });
+  return [...mapa.entries()];
 }
 
 function pintaDiagrama(id){
   const f=porId[id]; if(!f) return;
   foco=id;
   const padres=(f.padres||[]).filter(p=>porId[p]);
-  const parejas=parejasDe(id);
-  const hijos=[...new Set([].concat(hijosDe[id]||[], ...parejas.map(p=>hijosDe[p]||[])))].filter(x=>porId[x]);
+  const ramas=ramasDe(id);
+  const total=ramas.reduce((s,r)=>s+r[1].length,0);
 
   let html="";
   if(padres.length){
-    html+=`<div class="nivel"><p class="nivel-tit">${padres.length>1?"Padres":"Origen"}</p>
-      <div class="fila centrada">${padres.map((p,i)=>nodo(p)+(i<padres.length-1?'<div class="lazo"></div>':"")).join("")}</div>
-      <div class="bajada"></div></div>`;
+    html+=`<p class="nivel-tit">${padres.length>1?"Sus padres":"Nace de"}</p>
+      <div class="fila">${padres.map((p,i)=>nodo(p)+(i<padres.length-1?'<div class="lazo"></div>':"")).join("")}</div>
+      <div class="bajada"></div>`;
   }
-  html+=`<div class="nivel"><p class="nivel-tit">${parejas.length?"Unión":"Figura"}</p>
-    <div class="fila centrada">${[id,...parejas].map((p,i,a)=>nodo(p,i===0?" foco":"")+(i<a.length-1?'<div class="lazo"></div>':"")).join("")}</div></div>`;
+  html+=`<div class="fila">${nodo(id," foco")}</div>`;
 
-  if(hijos.length){
-    html+=`<div class="nivel"><p class="nivel-tit" style="margin:16px 0 10px">Descendencia · ${hijos.length}</p>
-      <div class="bajada"></div><div class="barra" id="barra"></div>
-      <div class="fila desliza" id="fila-hijos">${hijos.map(x=>'<div><div class="colgante"></div>'+nodo(x)+"</div>").join("")}</div></div>`;
+  if(!ramas.length){
+    html+=`<p class="sin">Sin uniones ni descendencia registradas</p>`;
   }else{
-    html+=`<p class="sin">Sin descendencia registrada</p>`;
+    ramas.forEach(([otro,hijos],i)=>{
+      const solo=otro==="__solo";
+      const abierta=(ramas.length===1||total<=8||i===0)?" abierta":"";
+      const cuenta=hijos.length?`${hijos.length} ${hijos.length===1?"descendiente":"descendientes"}`:"sin descendencia registrada";
+      html+=`<section class="rama${abierta}">
+        <button class="rama-cab" aria-expanded="${abierta?"true":"false"}">
+          <span class="signo">${abierta?"\u2212":"+"}</span>
+          <span><span class="con">${solo?"Sin union":"Unido a"}</span>
+          <span class="quien">${solo?"Descendencia propia":porId[otro].n}</span></span>
+          <span class="cuenta">${cuenta}</span>
+        </button>
+        <div class="rama-cuerpo">
+          ${solo?"":`<div class="pareja-mini">${nodo(otro)}</div>`}
+          ${hijos.length?`<div class="bajada"></div><div class="barra"></div>
+            <div class="fila desliza">${hijos.map(x=>'<div><div class="colgante"></div>'+nodo(x)+"</div>").join("")}</div>`
+            :`<p class="sin">Sin descendencia registrada</p>`}
+        </div></section>`;
+    });
   }
   dia.innerHTML=html;
-
-  // la barra de hermanos se mide despues de dibujar
-  const fila=$("#fila-hijos"), barra=$("#barra");
-  if(fila&&barra){
-    const n=fila.children.length;
-    if(n<2){barra.style.display="none"}
-    else{
-      const a=fila.children[0].getBoundingClientRect(), b=fila.children[n-1].getBoundingClientRect();
-      const base=fila.getBoundingClientRect();
-      const x1=a.left-base.left+fila.scrollLeft+a.width/2, x2=b.left-base.left+fila.scrollLeft+b.width/2;
-      barra.style.width=(x2-x1)+"px"; barra.style.marginLeft=x1+"px";
-    }
-  }
+  $$(".rama.abierta").forEach(midebarra);
 
   tarjeta.innerHTML=`<p class="rol">${f.rol}</p><h2>${f.n}</h2>
     ${f.epi?`<p class="epi">${f.epi}</p>`:""}
@@ -456,8 +486,31 @@ function pintaDiagrama(id){
   history.replaceState(null,"","#"+id);
 }
 
-dia.addEventListener("click",e=>{const b=e.target.closest("[data-foco]");if(b)pintaDiagrama(b.dataset.foco)});
+/* la barra que une a los hermanos se mide una vez dibujados */
+function midebarra(rama){
+  const fila=rama.querySelector(".fila.desliza"), barra=rama.querySelector(".barra");
+  if(!fila||!barra) return;
+  const n=fila.children.length;
+  if(n<2){barra.style.display="none";return}
+  const base=fila.getBoundingClientRect();
+  const a=fila.children[0].getBoundingClientRect(), b=fila.children[n-1].getBoundingClientRect();
+  const x1=a.left-base.left+fila.scrollLeft+a.width/2, x2=b.left-base.left+fila.scrollLeft+b.width/2;
+  barra.style.width=(x2-x1)+"px"; barra.style.marginLeft=x1+"px"; barra.style.display="";
+}
+
+dia.addEventListener("click",e=>{
+  const cab=e.target.closest(".rama-cab");
+  if(cab){
+    const rama=cab.closest(".rama"), ab=rama.classList.toggle("abierta");
+    cab.setAttribute("aria-expanded",ab);
+    cab.querySelector(".signo").textContent=ab?"\u2212":"+";
+    if(ab) midebarra(rama);
+    return;
+  }
+  const b=e.target.closest("[data-foco]"); if(b) pintaDiagrama(b.dataset.foco);
+});
 migas.addEventListener("click",e=>{const b=e.target.closest("[data-foco]");if(b)pintaDiagrama(b.dataset.foco)});
+window.addEventListener("resize",()=>$$(".rama.abierta").forEach(midebarra));
 
 $$(".modos .chip").forEach(c=>c.addEventListener("click",()=>{
   $$(".modos .chip").forEach(o=>o.setAttribute("aria-pressed",o===c));
