@@ -8,7 +8,15 @@
    CRONOLOGIA   -> cada episodio (era, marca, titulo, resena, ver)
    GENERACIONES -> los bloques del arbol genealogico
    FIGURAS      -> cada personaje (id, n, rol, epi, gen, padres,
-                   pareja, r = resena, v = variantes y fuentes)
+                   pareja, r = resena, v = variantes, img = imagen)
+
+   El campo "img" es opcional: la ruta de una ilustracion o
+   fotografia para esa figura, por ejemplo img:"imagenes/gea.jpg".
+   Guarda los archivos en una carpeta "imagenes" junto a este
+   archivo y subela igual que los demas. Si una figura no lo
+   tiene, el sitio muestra su inicial dentro del circulo, asi
+   que puedes ir agregando ilustraciones de a poco. Conviene
+   que sean cuadradas, de unos 400x400 pixeles.
 
    El campo "v" es opcional: uselo para discrepancias entre
    fuentes, nombres alternativos y versiones minoritarias. Se
@@ -75,6 +83,9 @@ const GENERACIONES = [
 const FIGURAS = [
  {id:"caos", n:"Caos", rol:"Primordial", epi:"La sima que se abre", gen:"g1", padres:[],
   r:"El primer principio: un hueco bostezante, sin forma ni límite. No engendra por unión sino por simple aparición, y de él salen la noche y la sombra."},
+ /* ejemplo con ilustracion:
+    {id:"ejemplo", n:"Nombre", rol:"Rol", epi:"Epiteto", gen:"g1", padres:["caos"],
+     img:"imagenes/nombre.jpg", r:"Resena...", v:"Variantes..."},  */
  {id:"gea", n:"Gea", rol:"Primordial", epi:"La tierra de amplio pecho", gen:"g1", padres:["caos"], pareja:["urano","ponto","tartaro"],
   r:"Suelo firme y madre de casi todo lo que existe. Sin intervención masculina engendra primero a Urano, el mayor y más importante de sus hijos, y a continuación dos rasgos de su propia topografía que pueden entenderse como distintos de ella: las Montañas y el mar profundo, Ponto. Con cada uno de esos dos varones funda después una familia de signo contrario. Unida a Urano levanta la principal, la estirpe de la que saldrán los titanes y, tras ellos, los dioses olímpicos. Unida a Ponto levanta una menor y de naturaleza marítima, poblada de dioses del mar, ninfas y criaturas grotescas que quedarán por necesidad al margen del Olimpo. Es además la conspiradora perpetua: arma a Crono contra Urano, y después a los Gigantes y a Tifón contra Zeus."},
  {id:"tartaro", n:"Tártaro", rol:"Primordial", epi:"El abismo bajo la tierra", gen:"g1", padres:["caos"], pareja:["gea"],
