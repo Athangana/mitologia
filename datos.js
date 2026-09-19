@@ -8,7 +8,11 @@
    CRONOLOGIA   -> cada episodio (era, marca, titulo, resena, ver)
    GENERACIONES -> los bloques del arbol genealogico
    FIGURAS      -> cada personaje (id, n, rol, epi, gen, padres,
-                   pareja, r = resena)
+                   pareja, r = resena, v = variantes y fuentes)
+
+   El campo "v" es opcional: uselo para discrepancias entre
+   fuentes, nombres alternativos y versiones minoritarias. Se
+   muestra aparte, en letra mas chica, debajo de la resena.
 
    Regla unica: el "id" de cada figura debe ser unico y sin
    tildes ni espacios, porque es el que usan "padres",
@@ -44,7 +48,7 @@ const CRONOLOGIA = [
  {era:"e3", marca:"Humanidad", titulo:"El diluvio de Deucalión", resena:"Harto de la edad de bronce, Zeus anega la tierra. Sobreviven Deucalión, hijo de Prometeo, y Pirra, que repueblan el mundo lanzando piedras por encima del hombro: los huesos de la madre tierra se vuelven hombres.", ver:["prometeo","zeus"]},
 
  {era:"e4", marca:"Generación I", titulo:"Perseo y la Gorgona", resena:"Con las sandalias aladas, el casco de Hades y un escudo pulido como espejo, decapita a Medusa sin mirarla. De su cuello brota Pegaso, y la cabeza cortada seguirá petrificando enemigos hasta terminar en el escudo de Atenea.", ver:["perseo","atenea"]},
- {era:"e4", marca:"Generación II", titulo:"Los doce trabajos de Heracles", resena:"Enloquecido por Hera, mata a su familia; la expiación son doce tareas imposibles al servicio de Euristeo, del león de Nemea al perro Cerbero. Es el único héroe que termina sentado entre los dioses.", ver:["heracles","hera"]},
+ {era:"e4", marca:"Generación II", titulo:"Los doce trabajos de Heracles", resena:"Enloquecido por Hera, mata a su familia; la expiación son doce tareas imposibles al servicio de Euristeo, del león de Nemea al perro Cerbero. Es el único héroe que termina sentado entre los dioses.", ver:["heracles","hera","hesperides"]},
  {era:"e4", marca:"Generación II", titulo:"Teseo y el Minotauro", resena:"Se ofrece como uno de los catorce jóvenes tributados a Creta y mata a la bestia del laberinto guiado por el hilo de Ariadna. Al volver olvida cambiar las velas negras, y su padre Egeo se arroja al mar que lleva su nombre.", ver:["teseo","minos","poseidon"]},
  {era:"e4", marca:"Generación II", titulo:"Los Argonautas", resena:"Jasón reúne a la primera tripulación de héroes para traer el vellocino de oro desde la Cólquide. Lo consigue por la hechicería de Medea, y el precio de esa deuda destruirá después a los dos.", ver:["orfeo","heracles"]},
  {era:"e4", marca:"Generación II", titulo:"La maldición de Tebas", resena:"Edipo resuelve el enigma de la Esfinge sin resolver el suyo: mata a su padre y desposa a su madre. La ciudad arrastrará la culpa hasta la guerra de los Siete contra Tebas y la desobediencia de Antígona.", ver:["dioniso"]},
@@ -82,11 +86,13 @@ const FIGURAS = [
  {id:"hemera", n:"Hémera", rol:"Primordial", epi:"El día", gen:"g1", padres:["erebo","nix"],
   r:"La luz diurna en persona, nacida de la tiniebla y de la noche en el mismo parto que su hermano Éter: para los griegos el día procede de lo oscuro y no al revés. Hesíodo las sitúa a ella y a su madre en un mismo umbral que nunca cruzan juntas, saludándose al pasar mientras una entra y la otra sale."},
  {id:"eter", n:"Éter", rol:"Primordial", epi:"La luminosidad de las alturas", gen:"g1", padres:["erebo","nix"],
-  r:"El aire superior, purísimo y encendido, que respiran los dioses, frente al aire denso y bajo que respiran los mortales. Hermano de Hémera y nacido con ella del mismo parto, es más sustancia del cielo que personaje con relatos propios: Hesíodo lo nombra y no vuelve a ocuparse de él."},
+  r:"El aire superior, purísimo y encendido, que respiran los dioses, frente al aire denso y bajo que respiran los mortales. Hermano de Hémera y nacido con ella del mismo parto, es más sustancia del cielo que personaje con relatos propios:",
+  v:"Hesíodo lo nombra y no vuelve a ocuparse de él. Higino invierte el orden y hace de Éter y Hémera los padres de la tierra, el cielo y el mar."},
  {id:"moro", n:"Moro", rol:"Hijo de la Noche", epi:"El destino", gen:"g1", padres:["nix"],
   r:"Encabeza la lista de los hijos que la Noche engendra sola, y Hesíodo lo llama odioso. No es el destino en general sino algo más estrecho y más temible: la muerte ya señalada para un hombre concreto, la que le toca y de la que no hay apelación. Comparte raíz con la moira que cada mortal recibe al nacer."},
  {id:"ker", n:"Ker", rol:"Hija de la Noche", epi:"La Perdición", gen:"g1", padres:["nix"],
-  r:"La negra Ker, la ruina que se lleva al hombre en el instante final. Suele aparecer multiplicada en plural, las Keres, espíritus de la muerte violenta que merodean el campo de batalla y beben la sangre de los caídos. En la Ilíada, Zeus pone en la balanza las keres de Aquiles y de Héctor, y el plato que baja decide quién muere."},
+  r:"La negra Ker, la ruina que se lleva al hombre en el instante final. En la Ilíada, Zeus pone en la balanza las keres de Aquiles y de Héctor, y el plato que baja decide quién muere.",
+  v:"Suele aparecer multiplicada en plural, las Keres, espíritus de la muerte violenta que merodean el campo de batalla y beben la sangre de los caídos."},
  {id:"tanato", n:"Tánato", rol:"Hijo de la Noche", epi:"La Muerte", gen:"g1", padres:["nix"],
   r:"La muerte en persona, inflexible y sin ofrendas: es el único dios al que no se le levantan templos porque no acepta regalos. Hermano de Hipno, con quien transporta el cuerpo de Sarpedón desde Troya hasta Licia en la Ilíada. Sísifo llegó a encadenarlo, y mientras estuvo preso nadie en el mundo pudo morir."},
  {id:"hipno", n:"Hipno", rol:"Hijo de la Noche", epi:"El Sueño", gen:"g1", padres:["nix"],
@@ -94,15 +100,31 @@ const FIGURAS = [
  {id:"geras", n:"Geras", rol:"Hijo de la Noche", epi:"La Vejez", gen:"g1", padres:["nix"],
   r:"El envejecer como potencia autónoma y no deseada, hermano de la Muerte y de la Perdición. Apenas tiene relatos, pero la cerámica ática lo representa como un viejo encogido y reseco que forcejea con Heracles, la imagen del héroe peleando contra lo único que no puede vencer."},
  {id:"oneiros", n:"Los Oneiros", rol:"Hijos de la Noche", epi:"Los Sueños", gen:"g1", padres:["nix"],
-  r:"La tribu innumerable de los sueños, que Hesíodo cuelga de la Noche y Homero atribuye a Hipno. Salen de dos puertas: los que pasan por la de cuerno se cumplen, los que pasan por la de marfil engañan, y el durmiente no tiene manera de saber por cuál entró el suyo. Zeus se vale de uno de ellos para mandar a Agamenón un sueño falso al comienzo de la Ilíada."},
+  r:"La tribu innumerable de los sueños. Salen de dos puertas: los que pasan por la de cuerno se cumplen, los que pasan por la de marfil engañan, y el durmiente no tiene manera de saber por cuál entró el suyo.",
+  v:"Hesíodo los cuelga de la Noche; Homero, en cambio, los hace depender de Hipno. Zeus se vale de uno de ellos para mandar a Agamenón un sueño falso al comienzo de la Ilíada."},
  {id:"oizys", n:"Oizys", rol:"Hija de la Noche", epi:"El Dolor", gen:"g1", padres:["nix"],
   r:"La angustia y la miseria sostenidas, el sufrimiento que no es herida sino desgaste. Los romanos la tradujeron como Miseria. No protagoniza mito alguno: su fuerza está justamente en ser el fondo cotidiano contra el que se recortan las hazañas de los héroes."},
  {id:"apate", n:"Apate", rol:"Hija de la Noche", epi:"El Engaño", gen:"g1", padres:["nix"],
   r:"El fraude y la mentira eficaz, hermana de la Discordia y del Dolor. Los griegos no la condenaban sin matices: el engaño que Zeus sufre de Hera, o el que Odiseo emplea en Troya, pertenece al mismo terreno que ella gobierna. Escapa de la jarra de Pandora junto con los demás males."},
  {id:"nemesis", n:"Némesis", rol:"Hija de la Noche", epi:"El castigo merecido", gen:"g1", padres:["nix"],
-  r:"No es venganza ni azar, sino la corrección de lo desmedido: reparte a cada uno lo que le corresponde y recorta al que tiene de más o se envanece de más. Persigue sobre todo la soberbia del afortunado. Una tradición la hace madre de Helena, perseguida por Zeus y transformada en oca, con el huevo que Leda solo habría criado."},
+  r:"No es venganza ni azar, sino la corrección de lo desmedido: reparte a cada uno lo que le corresponde y recorta al que tiene de más o se envanece de más. Persigue sobre todo la soberbia del afortunado.",
+  v:"Una tradición la hace madre de Helena: perseguida por Zeus y transformada en oca, puso el huevo que Leda solo habría criado."},
  {id:"eris", n:"Eris", rol:"Hija de la Noche", epi:"La Discordia", gen:"g1", padres:["nix"],
   r:"La querella y la rivalidad. Hesíodo distingue dos: una ruinosa, que alimenta la guerra, y otra provechosa, que empuja al alfarero a competir con el alfarero. Es ella quien, excluida de las bodas de Peleo y Tetis, arroja la manzana que desata la guerra de Troya."},
+ {id:"filotes", n:"Filotes", rol:"Hija de la Noche", epi:"La ternura", gen:"g1", padres:["nix"],
+  r:"Su nombre significa amistad y afecto, y también el trato amoroso. Es la única de la prole de la Noche que no es un mal, aunque Hesíodo la coloca entre el Engaño y la Vejez: el cariño nace de la misma oscuridad que la discordia, y para los griegos esa vecindad no era una contradicción sino una advertencia."},
+ {id:"hesperides", n:"Las Hespérides", rol:"Hijas de la Noche", epi:"Las hijas de la Tarde", gen:"g1", padres:["nix"],
+  r:"Grupo de ninfas que habita el jardín de los dioses, en los confines occidentales de la tierra. Custodian allí, con el dragón Ladón, un árbol maravilloso que da manzanas doradas. Su nombre viene de Héspero, la estrella de la tarde, y su lugar es el crepúsculo, ahí donde su madre empieza. Heracles llega hasta ellas en el penúltimo de sus trabajos.",
+  v:"Algunas fuentes las sitúan en el lejano norte y no en occidente, y hablan de un bosque entero en lugar de un solo árbol. Suelen contarse tres, pero el número oscila entre dos y siete; los nombres más frecuentes son Hesperaretusa o Hesperia, Eritia o Eritheis, y Egle, todos alusivos a la tarde, al rojo del atardecer y a la claridad del día. Hay tradiciones que las hacen hijas de Atlas en vez de la Noche."},
+ {id:"momo", n:"Momo", rol:"Hijo de la Noche", epi:"La burla", gen:"g1", padres:["nix"],
+  r:"La censura y el sarcasmo. No combate a nadie: se dedica a encontrarle el defecto a todo, incluso a las obras de los dioses, y por pasarse de mordaz terminó expulsado del Olimpo.",
+  v:"Una tradición le atribuye haber sugerido a Zeus la guerra de Troya para aliviar a la Tierra del peso de tantos hombres."},
+ {id:"cloto", n:"Cloto", rol:"Hija de la Noche", epi:"La Hilandera", gen:"g1", padres:["nix"],
+  r:"La primera de las tres Moiras. Hila el hilo de la vida de cada individuo y lo saca de la rueca en el momento del nacimiento. Como sus hermanas, el arte la representa siempre como una mujer hermosa, mientras la literatura prefiere imaginarla anciana."},
+ {id:"laquesis", n:"Láquesis", rol:"Hija de la Noche", epi:"La Repartidora", gen:"g1", padres:["nix"],
+  r:"La segunda Moira: mide el hilo que su hermana ha hilado y asigna a cada uno el lote que le toca. Su nombre viene de la porción que se recibe por sorteo, y de ahí que el destino griego se parezca menos a un plan que a un reparto."},
+ {id:"atropo", n:"Átropo", rol:"Hija de la Noche", epi:"La Inflexible", gen:"g1", padres:["nix"],
+  r:"La tercera y más pequeña de las Moiras, y la que no admite vuelta atrás: corta el hilo con sus tijeras y esa vida termina. Su nombre significa literalmente la que no se deja desviar, ni por súplicas ni por ofrendas ni por los propios dioses."},
  {id:"urano", n:"Urano", rol:"Primordial", epi:"El cielo estrellado", gen:"g1", padres:["gea"], pareja:["gea"],
   r:"El mayor de los dos hijos que Gea concibe sin padre, y el más importante: el cielo estrellado, unido después a ella. Encierra a sus hijos monstruosos en el vientre de la tierra y por eso cae bajo la hoz de Crono."},
  {id:"ponto", n:"Ponto", rol:"Primordial", epi:"El mar sin cultivar", gen:"g1", padres:["gea"], pareja:["gea"],
@@ -135,7 +157,8 @@ const FIGURAS = [
  {id:"japeto", n:"Jápeto", rol:"Titán", epi:"El perforador", gen:"g2", padres:["gea","urano"],
   r:"Padre de Prometeo, Epimeteo y Atlas: la rama titánica que se juega el destino de los mortales. Los griegos lo tenían por antepasado de la humanidad."},
  {id:"temis", n:"Temis", rol:"Titánide", epi:"La ley que no se escribe", gen:"g2", padres:["gea","urano"], pareja:["zeus"],
-  r:"Encarna el orden justo y la costumbre. Consejera de Zeus y madre de las Horas y las Moiras, es la única titánide sentada en el Olimpo."},
+  r:"Encarna el orden justo y la costumbre. Consejera de Zeus y madre de las Horas, es la única titánide sentada en el Olimpo.",
+  v:"Hesíodo se contradice a sí mismo al atribuirle también las Moiras, que antes había hecho nacer de la Noche sola. El anexo sigue esa primera versión."},
  {id:"mnemosine", n:"Mnemósine", rol:"Titánide", epi:"La memoria", gen:"g2", padres:["gea","urano"], pareja:["zeus"],
   r:"Nueve noches con Zeus y nueve Musas: la poesía nace de la memoria, no de la inspiración súbita. Sin ella no habría relato del mito."},
 
