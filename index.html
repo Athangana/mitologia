@@ -25,12 +25,12 @@
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{
-  margin:0;background:var(--noche);color:var(--marmol);
+  margin:0;overflow-x:hidden;background:var(--noche);color:var(--marmol);
   font-family:var(--cuerpo);font-weight:300;font-size:17px;line-height:1.6;
   -webkit-font-smoothing:antialiased;
 }
 a{color:var(--verdigris)}
-.wrap{max-width:820px;margin:0 auto;padding:0 20px}
+.wrap{max-width:820px;margin:0 auto;padding:0 20px;min-width:0}
 
 /* ---------- cabecera ---------- */
 .tapa{padding:56px 0 28px;text-align:center;position:relative}
@@ -154,11 +154,15 @@ footer{border-top:1px solid var(--linea);padding:26px 0 46px;color:#63707C;font-
 .miga:hover{color:var(--verdigris)}
 .miga+.miga::before{content:"\203A";margin:0 7px;color:#4A5661}
 
+#diagrama{max-width:100%}
 .nivel-tit{font-family:var(--util);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#5E6B77;margin:0 0 12px}
-.fila{display:flex;gap:16px;align-items:flex-start;justify-content:center}
-.fila.desliza{justify-content:flex-start;overflow-x:auto;overflow-y:hidden;padding-bottom:8px;scrollbar-width:thin}
-.fila.desliza::-webkit-scrollbar{height:4px}
-.fila.desliza::-webkit-scrollbar-thumb{background:var(--linea);border-radius:2px}
+.fila{display:flex;gap:16px;align-items:flex-start;justify-content:center;max-width:100%}
+.hermanos{max-width:100%;overflow-x:auto;overflow-y:hidden;padding-bottom:8px;scrollbar-width:thin}
+.hermanos::-webkit-scrollbar{height:4px}
+.hermanos::-webkit-scrollbar-thumb{background:var(--linea);border-radius:2px}
+.pista{position:relative;display:inline-block;min-width:100%;padding-top:1px}
+.pista .fila{justify-content:center}
+.pista.ancha .fila{justify-content:flex-start}
 
 .nodo{flex:0 0 auto;width:102px;background:none;border:0;padding:0;cursor:pointer;color:var(--marmol);font-family:inherit;text-align:center}
 .nodo:focus-visible{outline:2px solid var(--verdigris);outline-offset:4px;border-radius:8px}
@@ -175,7 +179,7 @@ footer{border-top:1px solid var(--linea);padding:26px 0 46px;color:#63707C;font-
 
 .lazo{align-self:flex-start;margin-top:31px;height:1px;width:24px;background:var(--verdigris);flex:0 0 24px}
 .bajada{width:1px;height:26px;background:var(--linea);margin:0 auto}
-.barra{height:1px;background:var(--linea)}
+.barra{position:absolute;top:0;left:0;height:1px;background:var(--linea)}
 .colgante{width:1px;height:18px;background:var(--linea);margin:0 auto 10px}
 .sin{font-family:var(--util);font-size:11px;color:#5E6B77;text-align:center;padding:10px 0}
 
@@ -189,7 +193,7 @@ footer{border-top:1px solid var(--linea);padding:26px 0 46px;color:#63707C;font-
 .rama-cab .con{font-family:var(--util);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#6C7883;display:block}
 .rama-cab .quien{font-family:var(--display);font-size:19px;display:block;line-height:1.2}
 .rama-cab .cuenta{margin-left:auto;font-family:var(--util);font-size:11px;color:var(--marmol-suave)}
-.rama-cuerpo{display:none;padding-top:8px}
+.rama-cuerpo{display:none;padding-top:8px;max-width:100%}
 .rama.abierta .rama-cuerpo{display:block}
 .pareja-mini{display:flex;justify-content:center;padding:6px 0 0}
 
@@ -211,10 +215,38 @@ footer{border-top:1px solid var(--linea);padding:26px 0 46px;color:#63707C;font-
 @media(min-width:1040px){
   .wrap,.tabs-in{max-width:1080px}
   .intro,.nudo-cuerpo p,.era-tit{max-width:64ch}
-  #modo-diagrama{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);gap:40px;align-items:start}
+  #modo-diagrama{display:grid;min-width:0;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);gap:40px;align-items:start}
   #migas{grid-column:1/-1}
   .tarjeta-foco{border-top:0;border-left:1px solid var(--linea);padding:4px 0 0 32px;margin-top:0;position:sticky;top:78px}
   .tarjeta-foco h2{font-size:34px}
+}
+
+
+/* ---------- árbol completo, lienzo navegable ---------- */
+.lienzo{position:relative;height:74vh;min-height:430px;background:var(--noche-2);border:1px solid var(--linea);
+  border-radius:3px;overflow:hidden;touch-action:none;cursor:grab}
+.lienzo.agarrando{cursor:grabbing}
+.mundo{position:absolute;top:0;left:0;transform-origin:0 0}
+.mundo svg{display:block}
+.rama-l{fill:none;stroke:var(--linea);stroke-width:1.2}
+.lazo-l{stroke:var(--verdigris);stroke-width:1.2;opacity:.65}
+.m-nodo{cursor:pointer}
+.m-disco{fill:var(--noche);stroke:var(--linea);stroke-width:1.2;transition:stroke .15s,fill .15s}
+.m-ini{font-family:var(--display);font-size:19px;fill:var(--marmol-suave);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.m-nom{font-family:var(--display);font-size:13px;fill:var(--marmol);text-anchor:middle;pointer-events:none}
+.m-rol{font-family:var(--util);font-size:7.5px;letter-spacing:.09em;fill:#6C7883;text-anchor:middle;pointer-events:none;text-transform:uppercase}
+.m-nodo:hover .m-disco,.m-nodo.activo .m-disco{stroke:var(--verdigris);stroke-width:2;fill:rgba(121,179,166,.1)}
+.m-nodo.grupo .m-disco{stroke-dasharray:3 3}
+.mandos{position:absolute;right:12px;bottom:12px;display:flex;flex-direction:column;gap:6px}
+.mandos button{width:38px;height:38px;background:rgba(14,22,32,.9);border:1px solid var(--linea);color:var(--marmol);
+  font-family:var(--util);font-size:16px;border-radius:3px;cursor:pointer;line-height:1}
+.mandos button:hover{border-color:var(--verdigris);color:var(--verdigris)}
+.pista-uso{position:absolute;left:12px;bottom:12px;right:60px;margin:0;font-family:var(--util);font-size:9.5px;
+  letter-spacing:.06em;color:#5E6B77;pointer-events:none}
+@media(min-width:1040px){
+  #modo-mapa{grid-column:1/-1}
+  .lienzo{height:78vh}
+  .pista-uso{font-size:10.5px}
 }
 
 /* ---------- versión impresa (base para el ilustrador) ---------- */
@@ -269,11 +301,24 @@ footer{border-top:1px solid var(--linea);padding:26px 0 46px;color:#63707C;font-
   <section class="vista" id="arbol" role="tabpanel" aria-labelledby="tab-arbol">
     <p class="intro">El árbol se recorre de una familia a la vez: arriba los padres, al centro la unión y abajo la descendencia. Toca cualquier círculo para moverte hasta él.</p>
     <div class="filtros modos">
-      <button class="chip" data-modo="diagrama" aria-pressed="true">Diagrama</button>
-      <button class="chip" data-modo="indice" aria-pressed="false">Índice completo</button>
+      <button class="chip" data-modo="mapa" aria-pressed="true">Árbol completo</button>
+      <button class="chip" data-modo="diagrama" aria-pressed="false">Familia</button>
+      <button class="chip" data-modo="indice" aria-pressed="false">Índice</button>
     </div>
 
-    <div id="modo-diagrama">
+    <div id="modo-mapa">
+      <div class="lienzo" id="lienzo">
+        <div class="mundo" id="mundo"></div>
+        <div class="mandos">
+          <button id="zmas" aria-label="Acercar">+</button>
+          <button id="zmenos" aria-label="Alejar">−</button>
+          <button id="zajuste" aria-label="Ver todo">□</button>
+        </div>
+        <p class="pista-uso">Arrastra para moverte · pellizca o usa + y − para acercar · toca un nombre para leer su reseña</p>
+      </div>
+    </div>
+
+    <div id="modo-diagrama" hidden>
       <div class="migas" id="migas"></div>
       <div class="diagrama" id="diagrama"></div>
       <article class="tarjeta-foco" id="tarjeta-foco"></article>
@@ -393,7 +438,7 @@ function abrir(id){
   panel.classList.add("visible");velo.classList.add("visible");
   panel.scrollTop=0;panel.focus();
   history.replaceState(null,"","#"+id);
-  if(typeof pintaDiagrama==="function"&&porId[id]) pintaDiagrama(id);
+  if(porId[id]&&!$("#modo-diagrama").hidden) pintaDiagrama(id);
 }
 function cerrar(){
   panel.classList.remove("visible");velo.classList.remove("visible");
@@ -467,8 +512,10 @@ function pintaDiagrama(id){
         </button>
         <div class="rama-cuerpo">
           ${solo?"":`<div class="pareja-mini">${nodo(otro)}</div>`}
-          ${hijos.length?`<div class="bajada"></div><div class="barra"></div>
-            <div class="fila desliza">${hijos.map(x=>'<div><div class="colgante"></div>'+nodo(x)+"</div>").join("")}</div>`
+          ${hijos.length?`<div class="bajada"></div>
+            <div class="hermanos"><div class="pista"><div class="barra"></div>
+            <div class="fila">${hijos.map(x=>'<div><div class="colgante"></div>'+nodo(x)+"</div>").join("")}</div>
+            </div></div>`
             :`<p class="sin">Sin descendencia registrada</p>`}
         </div></section>`;
     });
@@ -488,14 +535,17 @@ function pintaDiagrama(id){
 
 /* la barra que une a los hermanos se mide una vez dibujados */
 function midebarra(rama){
-  const fila=rama.querySelector(".fila.desliza"), barra=rama.querySelector(".barra");
-  if(!fila||!barra) return;
+  const carril=rama.querySelector(".hermanos"), pista=rama.querySelector(".pista"),
+        fila=pista&&pista.querySelector(".fila"), barra=rama.querySelector(".barra");
+  if(!fila||!barra||!carril) return;
+  // si los hermanos no caben, se alinean a la izquierda y el carril se desplaza
+  pista.classList.toggle("ancha", fila.scrollWidth>carril.clientWidth);
   const n=fila.children.length;
   if(n<2){barra.style.display="none";return}
-  const base=fila.getBoundingClientRect();
+  const base=pista.getBoundingClientRect();
   const a=fila.children[0].getBoundingClientRect(), b=fila.children[n-1].getBoundingClientRect();
-  const x1=a.left-base.left+fila.scrollLeft+a.width/2, x2=b.left-base.left+fila.scrollLeft+b.width/2;
-  barra.style.width=(x2-x1)+"px"; barra.style.marginLeft=x1+"px"; barra.style.display="";
+  const x1=a.left-base.left+a.width/2, x2=b.left-base.left+b.width/2;
+  barra.style.left=x1+"px"; barra.style.width=(x2-x1)+"px"; barra.style.display="";
 }
 
 dia.addEventListener("click",e=>{
@@ -514,12 +564,168 @@ window.addEventListener("resize",()=>$$(".rama.abierta").forEach(midebarra));
 
 $$(".modos .chip").forEach(c=>c.addEventListener("click",()=>{
   $$(".modos .chip").forEach(o=>o.setAttribute("aria-pressed",o===c));
-  const dg=c.dataset.modo==="diagrama";
-  $("#modo-diagrama").hidden=!dg; $("#modo-indice").hidden=dg;
-  if(dg) pintaDiagrama(foco||"gea");
+  const m=c.dataset.modo;
+  $("#modo-mapa").hidden=m!=="mapa";
+  $("#modo-diagrama").hidden=m!=="diagrama";
+  $("#modo-indice").hidden=m!=="indice";
+  if(m==="diagrama") pintaDiagrama(foco||"gea");
+  if(m==="mapa") ajustaMapa();
 }));
 
 pintaDiagrama("gea");
+requestAnimationFrame(ajustaMapa);
+
+/* --- árbol completo: cálculo de posiciones y dibujo --- */
+const MP={sep:126, alto:158, r:22};
+let posMapa=null, anchoMapa=0, altoMapa=0;
+
+function calculaMapa(){
+  const prof={}, enCurso={};
+  const profundidad=id=>{
+    if(prof[id]!=null) return prof[id];
+    if(enCurso[id]) return 0;
+    enCurso[id]=1;
+    const ps=(porId[id].padres||[]).filter(p=>porId[p]);
+    prof[id]= ps.length ? 1+Math.max(...ps.map(profundidad)) : 0;
+    enCurso[id]=0; return prof[id];
+  };
+  FIGURAS.forEach(f=>profundidad(f.id));
+
+  // orden base: recorrido desde las raíces, cada figura seguida de su pareja
+  const orden={}; let k=0; const visto=new Set();
+  const recorre=id=>{
+    if(visto.has(id)) return; visto.add(id); orden[id]=k++;
+    const f=porId[id];
+    (f.pareja||[]).forEach(p=>{ if(porId[p]&&!visto.has(p)&&prof[p]===prof[id]){visto.add(p);orden[p]=k++;} });
+    (hijosDe[id]||[]).forEach(recorre);
+  };
+  FIGURAS.filter(f=>!(f.padres||[]).filter(p=>porId[p]).length).forEach(f=>recorre(f.id));
+  FIGURAS.forEach(f=>recorre(f.id));
+
+  const niveles={};
+  FIGURAS.forEach(f=>{ (niveles[prof[f.id]]=niveles[prof[f.id]]||[]).push(f.id) });
+  const hondo=Math.max(...Object.keys(niveles).map(Number));
+  const x={};
+  for(let d=0; d<=hondo; d++){
+    (niveles[d]||[]).sort((a,b)=>orden[a]-orden[b]).forEach((id,i)=>{ x[id]=i*MP.sep });
+  }
+
+  const media=a=>a.length? a.reduce((s,v)=>s+v,0)/a.length : null;
+  const acomoda=(fila,deseado)=>{
+    fila.sort((a,b)=>x[a]-x[b]);
+    let libre=-Infinity;
+    fila.forEach(id=>{
+      const q=deseado(id);
+      let v=(q==null?x[id]:q);
+      if(v<libre) v=libre;
+      x[id]=v; libre=v+MP.sep;
+    });
+  };
+  for(let paso=0; paso<4; paso++){
+    for(let d=hondo-1; d>=0; d--)
+      acomoda((niveles[d]||[]).slice(), id=>media((hijosDe[id]||[]).filter(c=>porId[c]).map(c=>x[c])));
+    for(let d=1; d<=hondo; d++)
+      acomoda((niveles[d]||[]).slice(), id=>media((porId[id].padres||[]).filter(p=>porId[p]).map(p=>x[p])));
+  }
+  const minimo=Math.min(...Object.values(x));
+  Object.keys(x).forEach(id=>{ x[id]=x[id]-minimo+70 });
+
+  posMapa={}; FIGURAS.forEach(f=>{ posMapa[f.id]={x:x[f.id], y:prof[f.id]*MP.alto+60, d:prof[f.id]} });
+  anchoMapa=Math.max(...Object.values(posMapa).map(p=>p.x))+90;
+  altoMapa=(hondo)*MP.alto+150;
+}
+
+function dibujaMapa(){
+  if(!posMapa) calculaMapa();
+  const lineas=[], lazos=[], nodos=[];
+  FIGURAS.forEach(f=>{
+    const p=posMapa[f.id], ps=(f.padres||[]).filter(q=>porId[q]);
+    if(ps.length){
+      const xs=ps.map(q=>posMapa[q].x), py=posMapa[ps[0]].y;
+      const cx=xs.reduce((s,v)=>s+v,0)/xs.length;
+      const medio=py+MP.r+((p.y-MP.r)-(py+MP.r))*0.55;
+      lineas.push(`<path class="rama-l" d="M${cx} ${py+MP.r} V${medio} H${p.x} V${p.y-MP.r}"/>`);
+      if(ps.length>1){
+        const a=Math.min(...xs), b=Math.max(...xs);
+        lazos.push(`<line class="lazo-l" x1="${a+MP.r}" y1="${py}" x2="${b-MP.r}" y2="${py}"/>`);
+      }
+    }
+    const grupo=/^(Los|Las)\s/.test(f.n)?" grupo":"";
+    const nom=f.n.length>17?f.n.slice(0,16)+"\u2026":f.n;
+    nodos.push(`<g class="m-nodo${grupo}" data-ir="${f.id}" data-id="${f.id}">
+      <title>${f.n}</title>
+      <circle class="m-disco" cx="${p.x}" cy="${p.y}" r="${MP.r}"/>
+      <text class="m-ini" x="${p.x}" y="${p.y}">${inicial(f)}</text>
+      <text class="m-nom" x="${p.x}" y="${p.y+MP.r+17}">${nom}</text>
+      <text class="m-rol" x="${p.x}" y="${p.y+MP.r+31}">${f.rol}</text></g>`);
+  });
+  $("#mundo").innerHTML=`<svg width="${anchoMapa}" height="${altoMapa}" viewBox="0 0 ${anchoMapa} ${altoMapa}">
+    <g>${lazos.join("")}${lineas.join("")}</g><g>${nodos.join("")}</g></svg>`;
+}
+
+/* --- navegación del lienzo: arrastrar, pellizcar y botones --- */
+let esc=1, tx=0, ty=0;
+const lienzo=$("#lienzo"), mundo=$("#mundo");
+const aplica=()=>{ mundo.style.transform=`translate(${tx}px,${ty}px) scale(${esc})` };
+
+function ajustaMapa(){
+  dibujaMapa();
+  const c=lienzo.getBoundingClientRect();
+  esc=Math.min(c.width/anchoMapa, c.height/altoMapa);
+  esc=Math.max(0.08, Math.min(esc, 1));
+  tx=(c.width-anchoMapa*esc)/2; ty=24;
+  aplica();
+}
+function zoom(factor, cx, cy){
+  const c=lienzo.getBoundingClientRect();
+  cx=cx==null?c.width/2:cx; cy=cy==null?c.height/2:cy;
+  const nueva=Math.max(0.08, Math.min(3, esc*factor));
+  tx=cx-(cx-tx)*(nueva/esc); ty=cy-(cy-ty)*(nueva/esc); esc=nueva; aplica();
+}
+$("#zmas").addEventListener("click",()=>zoom(1.3));
+$("#zmenos").addEventListener("click",()=>zoom(1/1.3));
+$("#zajuste").addEventListener("click",ajustaMapa);
+
+let punteros=new Map(), arrastre=null, sepIni=0, escIni=1, movido=0;
+lienzo.addEventListener("pointerdown",e=>{
+  lienzo.setPointerCapture(e.pointerId);
+  punteros.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  movido=0;
+  if(punteros.size===1){ arrastre={x:e.clientX-tx, y:e.clientY-ty}; lienzo.classList.add("agarrando"); }
+  if(punteros.size===2){ const [a,b]=[...punteros.values()]; sepIni=Math.hypot(a.x-b.x,a.y-b.y); escIni=esc; }
+});
+lienzo.addEventListener("pointermove",e=>{
+  if(!punteros.has(e.pointerId)) return;
+  const prev=punteros.get(e.pointerId);
+  movido+=Math.abs(e.clientX-prev.x)+Math.abs(e.clientY-prev.y);
+  punteros.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(punteros.size===2){
+    const [a,b]=[...punteros.values()];
+    const sep=Math.hypot(a.x-b.x,a.y-b.y);
+    const c=lienzo.getBoundingClientRect();
+    const mx=(a.x+b.x)/2-c.left, my=(a.y+b.y)/2-c.top;
+    if(sepIni>0) zoom((escIni*sep/sepIni)/esc, mx, my);
+  }else if(arrastre){ tx=e.clientX-arrastre.x; ty=e.clientY-arrastre.y; aplica(); }
+});
+["pointerup","pointercancel","pointerleave"].forEach(ev=>lienzo.addEventListener(ev,e=>{
+  punteros.delete(e.pointerId);
+  if(punteros.size<2) sepIni=0;
+  if(!punteros.size){ arrastre=null; lienzo.classList.remove("agarrando"); }
+}));
+lienzo.addEventListener("wheel",e=>{
+  e.preventDefault();
+  const c=lienzo.getBoundingClientRect();
+  zoom(e.deltaY<0?1.12:1/1.12, e.clientX-c.left, e.clientY-c.top);
+},{passive:false});
+lienzo.addEventListener("click",e=>{
+  if(movido>8) return;
+  const g=e.target.closest("[data-ir]");
+  if(g){
+    $$(".m-nodo.activo").forEach(o=>o.classList.remove("activo"));
+    g.classList.add("activo");
+    abrir(g.dataset.ir);
+  }
+});
 
 /* --- pestañas --- */
 function verVista(id){
