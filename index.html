@@ -10,14 +10,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,600&family=Spectral:wght@300;400;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --papel:#F3ECDE;
-  --papel-2:#EAE1CE;
-  --papel-3:#E0D5BD;
-  --tinta:#2A2926;
-  --tinta-suave:#6E6757;
-  --acento:#2F6F62;
-  --vino:#8A3B4E;
-  --linea:rgba(47,111,98,.26);
+  /* cerámica ática: arcilla, barniz negro y pátina de bronce */
+  --papel:#F2E9D7;
+  --papel-2:#EADFC8;
+  --papel-3:#DFD1B4;
+  --tinta:#231C15;
+  --tinta-suave:#6B5F4C;
+  --acento:#A6462C;
+  --bronce:#3E6F63;
+  --vino:#7E3247;
+  --linea:rgba(35,28,21,.20);
   --display:"Bodoni Moda",Georgia,serif;
   --cuerpo:"Spectral",Georgia,serif;
   --util:"IBM Plex Mono",ui-monospace,Menlo,monospace;
@@ -25,7 +27,13 @@
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{
-  margin:0;overflow-x:hidden;background:var(--papel);color:var(--tinta);
+  margin:0;overflow-x:hidden;color:var(--tinta);
+  background:var(--papel);
+  /* el grano tenue del pergamino */
+  background-image:
+    radial-gradient(circle at 18% 12%, rgba(166,70,44,.045), transparent 55%),
+    radial-gradient(circle at 82% 78%, rgba(62,111,99,.045), transparent 55%);
+  background-attachment:fixed;
   font-family:var(--cuerpo);font-weight:300;font-size:17px;line-height:1.6;
   -webkit-font-smoothing:antialiased;
 }
@@ -38,11 +46,15 @@ a{color:var(--acento)}
 .tapa h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,58px);line-height:1.02;margin:0;letter-spacing:-.01em}
 .tapa h1 em{font-style:italic;color:var(--acento)}
 .tapa p{color:var(--tinta-suave);max-width:44ch;margin:16px auto 0;font-size:16px}
-.greca{display:block;width:100%;height:22px;opacity:.55}
-.greca path{fill:none;stroke:var(--acento);stroke-width:1.4}
+/* el patrón vive en un SVG que debe seguir en el árbol de render:
+   con display:none, Chromium no pinta lo que lo referencia */
+.greca-defs{position:absolute;width:0;height:0;overflow:hidden}
+.greca{display:block;width:100%;height:22px;opacity:.6}
+.greca-pie{transform:scaleY(-1);opacity:.4;margin-top:40px}
+.greca path,.greca-defs path{fill:none;stroke:var(--acento);stroke-width:1.4}
 
 /* ---------- navegación ---------- */
-nav.tabs{position:sticky;top:0;z-index:40;background:rgba(243,236,222,.93);backdrop-filter:blur(10px);border-bottom:1px solid var(--linea)}
+nav.tabs{position:sticky;top:0;z-index:40;background:rgba(242,233,215,.93);backdrop-filter:blur(10px);border-bottom:1px solid var(--linea)}
 .tabs-in{display:flex;gap:6px;align-items:center;max-width:820px;margin:0 auto;padding:10px 20px}
 .tab{
   appearance:none;background:none;border:1px solid transparent;color:var(--tinta-suave);
@@ -56,7 +68,7 @@ nav.tabs{position:sticky;top:0;z-index:40;background:rgba(243,236,222,.93);backd
   width:100%;background:var(--papel-2);border:1px solid var(--linea);color:var(--tinta);
   font-family:var(--util);font-size:12px;padding:9px 12px;border-radius:2px;
 }
-.buscar input::placeholder{color:#948C79}
+.buscar input::placeholder{color:#8C7F63}
 .buscar input:focus{outline:2px solid var(--acento);outline-offset:1px}
 
 /* ---------- vistas ---------- */
@@ -67,12 +79,13 @@ nav.tabs{position:sticky;top:0;z-index:40;background:rgba(243,236,222,.93);backd
 /* ---------- cronología: el hilo ---------- */
 .era{margin:0 0 10px}
 .era-tit{display:flex;align-items:baseline;gap:12px;margin:38px 0 20px}
+.era-tit .rayita{height:1px;background:var(--linea);flex:1;align-self:center}
 .era-num{font-family:var(--util);font-size:11px;letter-spacing:.2em;color:var(--vino);padding-top:4px}
 .era-tit h2{font-family:var(--display);font-weight:400;font-size:clamp(23px,5.5vw,32px);margin:0;line-height:1.15}
 .era-tit .sub{font-family:var(--util);font-size:11px;color:var(--tinta-suave);letter-spacing:.08em}
 
 .hilo{position:relative;margin:0;padding:0 0 0 34px;list-style:none}
-.hilo::before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:1px;background:linear-gradient(var(--acento),rgba(47,111,98,.14))}
+.hilo::before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:1px;background:linear-gradient(var(--acento),rgba(35,28,21,.14))}
 .nudo{position:relative;margin:0 0 4px}
 .nudo::before{
   content:"";position:absolute;left:-29px;top:16px;width:9px;height:9px;border-radius:50%;
@@ -80,7 +93,7 @@ nav.tabs{position:sticky;top:0;z-index:40;background:rgba(243,236,222,.93);backd
 }
 .nudo.abierto::before{background:var(--acento);transform:scale(1.35)}
 .nudo-btn{
-  display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid rgba(42,41,38,.10);
+  display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid rgba(35,28,21,.10);
   color:var(--tinta);padding:12px 0;cursor:pointer;font-family:inherit;
 }
 .nudo-btn:focus-visible{outline:2px solid var(--acento);outline-offset:3px}
@@ -88,7 +101,7 @@ nav.tabs{position:sticky;top:0;z-index:40;background:rgba(243,236,222,.93);backd
 .nudo-tit{font-family:var(--display);font-size:20px;font-weight:400;line-height:1.25}
 .nudo-cuerpo{overflow:hidden;max-height:0;transition:max-height .35s ease}
 .nudo.abierto .nudo-cuerpo{max-height:640px}
-.nudo-cuerpo p{margin:2px 0 18px;font-size:16px;color:#3B392F}
+.nudo-cuerpo p{margin:2px 0 18px;font-size:16px;color:#33291E}
 .enlaces{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 18px}
 
 /* ---------- genealogía ---------- */
@@ -108,7 +121,7 @@ nav.tabs{position:sticky;top:0;z-index:40;background:rgba(243,236,222,.93);backd
 .gen-tit .rayita{height:1px;background:var(--linea);flex:1}
 .rejilla{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
 .ficha{
-  background:var(--papel-2);border:1px solid rgba(42,41,38,.09);border-left:2px solid transparent;
+  background:var(--papel-2);border:1px solid rgba(35,28,21,.09);border-left:2px solid transparent;
   padding:12px 13px;text-align:left;cursor:pointer;color:var(--tinta);font-family:inherit;
   transition:border-color .18s,background .18s,transform .18s;
 }
@@ -118,7 +131,7 @@ nav.tabs{position:sticky;top:0;z-index:40;background:rgba(243,236,222,.93);backd
 .ficha span{display:block;font-family:var(--util);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--tinta-suave);margin-top:5px}
 
 /* ---------- panel de detalle ---------- */
-.velo{position:fixed;inset:0;background:rgba(42,41,38,.38);opacity:0;pointer-events:none;transition:opacity .25s;z-index:60}
+.velo{position:fixed;inset:0;background:rgba(35,28,21,.38);opacity:0;pointer-events:none;transition:opacity .25s;z-index:60}
 .velo.visible{opacity:1;pointer-events:auto}
 .panel{
   position:fixed;z-index:70;background:var(--papel-2);border-top:2px solid var(--acento);
@@ -131,7 +144,7 @@ nav.tabs{position:sticky;top:0;z-index:40;background:rgba(243,236,222,.93);backd
 .panel .rol{font-family:var(--util);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--acento);margin:0 0 6px}
 .panel h2{font-family:var(--display);font-weight:400;font-size:33px;margin:0 0 2px;line-height:1.1}
 .panel .epi{font-style:italic;color:var(--tinta-suave);margin:0 0 16px;font-size:16px}
-.panel .resena{font-size:16.5px;color:#3B392F;margin:0 0 22px}
+.panel .resena{font-size:16.5px;color:#33291E;margin:0 0 22px}
 .bloque{margin:0 0 16px}
 .variantes{border-left:2px solid var(--linea);padding-left:13px;margin-bottom:22px}
 .variantes p{margin:0;font-size:14.5px;color:var(--tinta-suave);line-height:1.55}
@@ -142,7 +155,7 @@ nav.tabs{position:sticky;top:0;z-index:40;background:rgba(243,236,222,.93);backd
 }
 .vacio{color:var(--tinta-suave);font-family:var(--util);font-size:12px;padding:20px 0}
 
-footer{border-top:1px solid var(--linea);padding:26px 0 46px;color:#948C79;font-family:var(--util);font-size:11px;letter-spacing:.06em;text-align:center}
+footer{padding:22px 0 46px;color:#8C7F63;font-family:var(--util);font-size:11px;letter-spacing:.14em;text-align:center;text-transform:uppercase}
 
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
@@ -152,10 +165,10 @@ footer{border-top:1px solid var(--linea);padding:26px 0 46px;color:#948C79;font-
 .migas{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:0 0 16px;min-height:22px}
 .miga{background:none;border:0;color:var(--tinta-suave);font-family:var(--util);font-size:11px;cursor:pointer;padding:3px 0}
 .miga:hover{color:var(--acento)}
-.miga+.miga::before{content:"\203A";margin:0 7px;color:#A79D86}
+.miga+.miga::before{content:"\203A";margin:0 7px;color:#B0A184}
 
 #diagrama{max-width:100%}
-.nivel-tit{font-family:var(--util);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#7C7563;margin:0 0 12px}
+.nivel-tit{font-family:var(--util);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#7E7157;margin:0 0 12px}
 .fila{display:flex;gap:16px;align-items:flex-start;justify-content:center;max-width:100%}
 .hermanos{max-width:100%;overflow-x:auto;overflow-y:hidden;padding-bottom:8px;scrollbar-width:thin}
 .hermanos::-webkit-scrollbar{height:4px}
@@ -166,33 +179,48 @@ footer{border-top:1px solid var(--linea);padding:26px 0 46px;color:#948C79;font-
 
 .nodo{flex:0 0 auto;width:102px;background:none;border:0;padding:0;cursor:pointer;color:var(--tinta);font-family:inherit;text-align:center}
 .nodo:focus-visible{outline:2px solid var(--acento);outline-offset:4px;border-radius:8px}
-.disco{width:62px;height:62px;margin:0 auto 9px;border-radius:50%;background:var(--papel-2);border:1px solid var(--linea);overflow:hidden;background-size:cover;background-position:center;
+.disco{width:62px;height:62px;margin:0 auto 9px;border-radius:50%;background:var(--papel-2);border:1px solid var(--linea);
+  box-shadow:inset 0 0 0 3px var(--papel),inset 0 0 0 4px rgba(35,28,21,.10);
+  overflow:hidden;background-size:cover;background-position:center;
   display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:25px;color:var(--tinta-suave);
   transition:border-color .2s,color .2s,transform .2s}
 .nodo:hover .disco{border-color:var(--acento);color:var(--tinta);transform:translateY(-2px)}
 .nodo b{display:block;font-family:var(--display);font-weight:400;font-size:16px;line-height:1.15}
-.nodo i{display:block;font-style:normal;font-family:var(--util);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:#7C7563;margin-top:4px}
+.nodo i{display:block;font-style:normal;font-family:var(--util);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:#7E7157;margin-top:4px}
 .nodo.grupo .disco{border-style:dashed}
 .nodo.foco{width:130px}
-.nodo.foco .disco{width:84px;height:84px;font-size:34px;border-color:var(--acento);border-width:2px;color:var(--acento);background:rgba(47,111,98,.09)}
+.nodo.foco .disco{width:84px;height:84px;font-size:34px;border-color:var(--acento);border-width:2px;color:var(--acento);background:rgba(166,70,44,.08)}
 .nodo.foco b{color:var(--acento);font-size:20px}
 
 .lazo{align-self:flex-start;margin-top:31px;height:1px;width:24px;background:var(--acento);flex:0 0 24px}
 .bajada{width:1px;height:26px;background:var(--linea);margin:0 auto}
 .barra{position:absolute;top:0;left:0;height:1px;background:var(--linea)}
 .colgante{width:1px;height:18px;background:var(--linea);margin:0 auto 10px}
-.sin{font-family:var(--util);font-size:11px;color:#7C7563;text-align:center;padding:10px 0}
+.sin{font-family:var(--util);font-size:11px;color:#7E7157;text-align:center;padding:10px 0}
 
 /* ramas plegables por unión */
-.rama{border-top:1px solid rgba(42,41,38,.10);margin-top:18px;padding-top:14px}
-.rama-cab{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;color:var(--tinta);
-  font-family:inherit;text-align:left;cursor:pointer;padding:4px 0}
-.rama-cab:focus-visible{outline:2px solid var(--acento);outline-offset:3px}
-.signo{flex:0 0 22px;width:22px;height:22px;border:1px solid var(--acento);border-radius:2px;color:var(--acento);
-  display:flex;align-items:center;justify-content:center;font-family:var(--util);font-size:14px;line-height:1}
-.rama-cab .con{font-family:var(--util);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#7C7563;display:block}
-.rama-cab .quien{font-family:var(--display);font-size:19px;display:block;line-height:1.2}
+.rama{border-top:1px solid rgba(35,28,21,.10);margin-top:18px;padding-top:14px}
+.rama-cab{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:4px 0}
+.signo{flex:0 0 24px;width:24px;height:24px;background:none;border:1px solid var(--acento);border-radius:2px;
+  color:var(--acento);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-family:var(--util);font-size:14px;line-height:1;padding:0}
+.signo:hover{background:rgba(166,70,44,.10)}
+.signo:focus-visible{outline:2px solid var(--acento);outline-offset:3px}
+.rama-cab .con{font-family:var(--util);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#7E7157}
+.pareja-chip{display:flex;align-items:center;gap:9px;background:none;border:0;padding:3px 6px 3px 3px;
+  border-radius:99px;cursor:pointer;color:var(--tinta);font-family:inherit}
+.pareja-chip:hover{background:var(--papel-3)}
+.pareja-chip:focus-visible{outline:2px solid var(--acento);outline-offset:2px}
+.disco-min{width:30px;height:30px;border-radius:50%;background:var(--papel-2);border:1px solid var(--linea);
+  background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);font-size:14px;color:var(--tinta-suave);flex:0 0 30px}
+.rama-cab .quien{font-family:var(--display);font-size:19px;line-height:1.2}
 .rama-cab .cuenta{margin-left:auto;font-family:var(--util);font-size:11px;color:var(--tinta-suave)}
+.fila-foco{margin-bottom:6px}
+.tit-abajo{text-align:center;margin:14px 0 2px}
+.lazo{position:relative}
+.lazo span{position:absolute;left:50%;top:-11px;transform:translateX(-50%);color:var(--acento);font-size:19px;
+  background:var(--papel);padding:0 4px;line-height:1}
 .rama-cuerpo{display:none;padding-top:8px;max-width:100%}
 .rama.abierta .rama-cuerpo{display:block}
 .pareja-mini{display:flex;justify-content:center;padding:6px 0 0}
@@ -200,15 +228,15 @@ footer{border-top:1px solid var(--linea);padding:26px 0 46px;color:#948C79;font-
 /* vínculos que no son de sangre ni de unión */
 .vinc{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:0 0 8px}
 .vinc-como{font-family:var(--util);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--tinta-suave)}
-.lazos{border-top:1px solid rgba(42,41,38,.10);margin-top:18px;padding-top:14px}
+.lazos{border-top:1px solid rgba(35,28,21,.10);margin-top:18px;padding-top:14px}
 .lazo-uno{display:flex;flex-direction:column;align-items:center;gap:5px;max-width:132px}
-.lazo-como{font-family:var(--util);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#7C7563;text-align:center;line-height:1.5}
+.lazo-como{font-family:var(--util);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#7E7157;text-align:center;line-height:1.5}
 
 .tarjeta-foco{border-top:1px solid var(--linea);padding-top:22px;margin-top:26px}
 .tarjeta-foco .rol{font-family:var(--util);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--acento);margin:0 0 6px}
 .tarjeta-foco h2{font-family:var(--display);font-weight:400;font-size:31px;margin:0 0 2px;line-height:1.1}
 .tarjeta-foco .epi{font-style:italic;color:var(--tinta-suave);margin:0 0 16px;font-size:16px}
-.tarjeta-foco .resena{font-size:16.5px;color:#3B392F;margin:0 0 20px}
+.tarjeta-foco .resena{font-size:16.5px;color:#33291E;margin:0 0 20px}
 
 /* ---------- adaptación a tablet y escritorio ---------- */
 @media(min-width:700px){
@@ -240,31 +268,34 @@ footer{border-top:1px solid var(--linea);padding:26px 0 46px;color:#948C79;font-
 .lienzo.agarrando{cursor:grabbing}
 .mundo{position:absolute;top:0;left:0;transform-origin:0 0}
 .mundo svg{display:block}
-.rama-l{fill:none;stroke:rgba(42,41,38,.20);stroke-width:1}
-.union-l{fill:none;stroke:var(--acento);stroke-width:1.4;opacity:.8;stroke-linecap:round}
-.nudo-u{fill:var(--acento);opacity:.85}
+.rama-l{fill:none;stroke:rgba(35,28,21,.20);stroke-width:1}
+.union-l{fill:none;stroke:var(--bronce);stroke-width:1.4;opacity:.8;stroke-linecap:round}
+.nudo-u{fill:var(--bronce);opacity:.85}
 .vinculo-l{stroke:var(--vino);stroke-width:1.1;stroke-dasharray:3 4;opacity:.75}
 /* al elegir una figura se encienden sus líneas y se apagan las demás */
 .mundo.eligiendo .rama-l,.mundo.eligiendo .union-l{opacity:.2}
 .mundo.eligiendo .nudo-u{opacity:.2}
-.rama-l.res{stroke:var(--vino);stroke-width:1.8;opacity:1}
-.union-l.res{stroke:var(--vino);stroke-width:2;opacity:1}
-.nudo-u.res{fill:var(--vino);opacity:1}
+/* estas tienen que ganarle a la regla de atenuado de arriba */
+.mundo.eligiendo .rama-l.res{stroke:var(--tinta);stroke-width:1.7;opacity:1}
+.mundo.eligiendo .union-l.res{stroke:var(--acento);stroke-width:2.4;opacity:1}
+.mundo.eligiendo .nudo-u.res{fill:var(--acento);opacity:1}
+.mundo.eligiendo .vinculo-l.res{stroke:var(--vino);opacity:1}
 .mundo.eligiendo .m-nodo{opacity:.45}
 .mundo.eligiendo .m-nodo.res,.mundo.eligiendo .m-nodo.activo{opacity:1}
 .m-nodo{cursor:pointer}
-.m-disco{fill:var(--papel);stroke:var(--linea);stroke-width:1.2;transition:stroke .15s,fill .15s}
+.m-disco{fill:var(--papel-2);stroke:var(--linea);stroke-width:1.2;transition:stroke .15s,fill .15s}
+.m-aro{fill:none;stroke:rgba(35,28,21,.13);stroke-width:1}
 .m-ini{font-family:var(--display);font-size:19px;fill:var(--tinta-suave);text-anchor:middle;dominant-baseline:central;pointer-events:none}
 .m-nom{font-family:var(--display);font-size:13px;fill:var(--tinta);text-anchor:middle;pointer-events:none}
-.m-rol{font-family:var(--util);font-size:7.5px;letter-spacing:.09em;fill:#7C7563;text-anchor:middle;pointer-events:none;text-transform:uppercase}
-.m-nodo:hover .m-disco,.m-nodo.activo .m-disco{stroke:var(--acento);stroke-width:2;fill:rgba(47,111,98,.10)}
+.m-rol{font-family:var(--util);font-size:7.5px;letter-spacing:.09em;fill:#7E7157;text-anchor:middle;pointer-events:none;text-transform:uppercase}
+.m-nodo:hover .m-disco,.m-nodo.activo .m-disco{stroke:var(--acento);stroke-width:2;fill:rgba(166,70,44,.10)}
 .m-nodo.grupo .m-disco{stroke-dasharray:3 3}
 .mandos{position:absolute;right:12px;bottom:12px;display:flex;flex-direction:column;gap:6px}
-.mandos button{width:38px;height:38px;background:rgba(243,236,222,.94);border:1px solid var(--linea);color:var(--tinta);
+.mandos button{width:38px;height:38px;background:rgba(242,233,215,.94);border:1px solid var(--linea);color:var(--tinta);
   font-family:var(--util);font-size:16px;border-radius:3px;cursor:pointer;line-height:1}
 .mandos button:hover{border-color:var(--acento);color:var(--acento)}
 .pista-uso{position:absolute;left:12px;bottom:12px;right:60px;margin:0;font-family:var(--util);font-size:9.5px;
-  letter-spacing:.06em;color:#7C7563;pointer-events:none}
+  letter-spacing:.06em;color:#7E7157;pointer-events:none}
 @media(min-width:1040px){
   #modo-mapa{grid-column:1/-1}
   .lienzo{height:78vh}
@@ -275,6 +306,10 @@ footer{border-top:1px solid var(--linea);padding:26px 0 46px;color:#948C79;font-
 @media print{
   body{background:#fff;color:#000;font-size:11pt}
   nav.tabs,.buscar,.filtros,.velo,.panel,footer,.intro{display:none!important}
+  /* en papel manda el índice: el lienzo saldría recortado y la familia
+     es una sola rama de las muchas */
+  .modos,.migas,#modo-mapa,#modo-diagrama,.mandos,.pista-uso{display:none!important}
+  #modo-indice[hidden]{display:block!important}
   .vista{display:block!important;padding:0;page-break-before:always}
   .nudo-cuerpo{max-height:none!important}
   .disco{border-color:#666;color:#000}
@@ -284,13 +319,13 @@ footer{border-top:1px solid var(--linea);padding:26px 0 46px;color:#948C79;font-
   .hilo::before{background:#000}
   .nudo::before{border-color:#000;background:#fff}
   .ficha{border:1px solid #999;background:#fff;color:#000}
-  .greca path{stroke:#000}
+  .greca path,.greca-defs path{stroke:#000}
 }
 </style>
 </head>
 <body>
 
-<svg class="greca" style="display:none"><defs>
+<svg class="greca-defs" aria-hidden="true" focusable="false"><defs>
 <pattern id="grecaPat" width="26" height="22" patternUnits="userSpaceOnUse">
 <path d="M0 20 H26 M3 20 V5 H20 V16 H9 V10 H15"/>
 </pattern></defs></svg>
@@ -354,6 +389,8 @@ footer{border-top:1px solid var(--linea);padding:26px 0 46px;color:#948C79;font-
 
 </main>
 
+<svg class="greca greca-pie" viewBox="0 0 1040 22" preserveAspectRatio="none" aria-hidden="true"><rect width="1040" height="22" fill="url(#grecaPat)"/></svg>
+
 <footer>Anexo digital del libro · Última actualización: 2026</footer>
 
 <div class="velo" id="velo"></div>
@@ -409,7 +446,7 @@ ERAS.forEach(era=>{
   const sec=document.createElement("section");
   sec.className="era";
   sec.innerHTML=`<div class="era-tit"><span class="era-num">${era.num}</span>
-    <div><h2>${era.titulo}</h2><span class="sub">${era.sub}</span></div></div>
+    <div><h2>${era.titulo}</h2><span class="sub">${era.sub}</span></div><span class="rayita"></span></div>
     <ul class="hilo"></ul>`;
   const ul=sec.querySelector(".hilo");
   eventos.forEach(ev=>{
@@ -537,11 +574,12 @@ function pintaDiagrama(id){
 
   let html="";
   if(padres.length){
-    html+=`<p class="nivel-tit">${padres.length>1?"Sus padres":"Nace de"}</p>
-      <div class="fila">${padres.map((p,i)=>nodo(p)+(i<padres.length-1?'<div class="lazo"></div>':"")).join("")}</div>
+    html+=`<p class="nivel-tit">${padres.length>1?"Nace de la unión de":"Nace de"}</p>
+      <div class="fila">${padres.map((p,i)=>nodo(p)+(i<padres.length-1?'<div class="lazo"><span>\u26AD</span></div>':"")).join("")}</div>
       <div class="bajada"></div>`;
   }
-  html+=`<div class="fila">${nodo(id," foco")}</div>`;
+  html+=`<div class="fila fila-foco">${nodo(id," foco")}</div>`;
+  if(ramas.length) html+=`<p class="nivel-tit tit-abajo">Sus uniones y su descendencia</p>`;
 
   if(!ramas.length){
     html+=`<p class="sin">Sin uniones ni descendencia registradas</p>`;
@@ -550,15 +588,19 @@ function pintaDiagrama(id){
       const solo=otro==="__solo";
       const abierta=(ramas.length===1||total<=8||i===0)?" abierta":"";
       const cuenta=hijos.length?`${hijos.length} ${hijos.length===1?"descendiente":"descendientes"}`:"sin descendencia registrada";
+      const par=solo?"":porId[otro];
       html+=`<section class="rama${abierta}">
-        <button class="rama-cab" aria-expanded="${abierta?"true":"false"}">
-          <span class="signo">${abierta?"\u2212":"+"}</span>
-          <span><span class="con">${solo?"Sin union":"Unido a"}</span>
-          <span class="quien">${solo?"Descendencia propia":porId[otro].n}</span></span>
+        <div class="rama-cab">
+          <button class="signo" aria-expanded="${abierta?"true":"false"}"
+            aria-label="${abierta?"Plegar":"Desplegar"} esta rama">${abierta?"\u2212":"+"}</button>
+          <span class="con">${solo?"Sin unión" : "En unión con"}</span>
+          ${solo?`<span class="quien">descendencia propia</span>`
+                :`<button class="pareja-chip" data-foco="${otro}">
+                    <span class="disco-min"${par.img?` style="background-image:url(${par.img})"`:""}>${par.img?"":inicial(par)}</span>
+                    <span class="quien">${par.n}</span></button>`}
           <span class="cuenta">${cuenta}</span>
-        </button>
+        </div>
         <div class="rama-cuerpo">
-          ${solo?"":`<div class="pareja-mini">${nodo(otro)}</div>`}
           ${hijos.length?`<div class="bajada"></div>
             <div class="hermanos"><div class="pista"><div class="barra"></div>
             <div class="fila">${hijos.map(x=>'<div><div class="colgante"></div>'+nodo(x)+"</div>").join("")}</div>
@@ -602,11 +644,12 @@ function midebarra(rama){
 }
 
 dia.addEventListener("click",e=>{
-  const cab=e.target.closest(".rama-cab");
-  if(cab){
-    const rama=cab.closest(".rama"), ab=rama.classList.toggle("abierta");
-    cab.setAttribute("aria-expanded",ab);
-    cab.querySelector(".signo").textContent=ab?"\u2212":"+";
+  const signo=e.target.closest(".signo");
+  if(signo){
+    const rama=signo.closest(".rama"), ab=rama.classList.toggle("abierta");
+    signo.setAttribute("aria-expanded",ab);
+    signo.setAttribute("aria-label",(ab?"Plegar":"Desplegar")+" esta rama");
+    signo.textContent=ab?"\u2212":"+";
     if(ab) midebarra(rama);
     return;
   }
@@ -753,6 +796,7 @@ function dibujaMapa(){
       ${f.img?`<image href="${f.img}" x="${p.x-MP.r}" y="${p.y-MP.r}" width="${MP.r*2}" height="${MP.r*2}"
         preserveAspectRatio="xMidYMid slice" clip-path="url(#rec-${f.id})"/>`:""}
       <circle class="m-disco" cx="${p.x}" cy="${p.y}" r="${MP.r}" ${f.img?'fill="none"':""}/>
+      <circle class="m-aro" cx="${p.x}" cy="${p.y}" r="${MP.r-3.5}"/>
       ${f.img?"":`<text class="m-ini" x="${p.x}" y="${p.y}">${inicial(f)}</text>`}
       <text class="m-nom" x="${p.x}" y="${p.y+MP.r+17}">${nom}</text>
       <text class="m-rol" x="${p.x}" y="${p.y+MP.r+31}">${f.rol}</text></g>`);
