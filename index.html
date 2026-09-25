@@ -197,6 +197,13 @@ footer{border-top:1px solid var(--linea);padding:26px 0 46px;color:#948C79;font-
 .rama.abierta .rama-cuerpo{display:block}
 .pareja-mini{display:flex;justify-content:center;padding:6px 0 0}
 
+/* vínculos que no son de sangre ni de unión */
+.vinc{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:0 0 8px}
+.vinc-como{font-family:var(--util);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--tinta-suave)}
+.lazos{border-top:1px solid rgba(42,41,38,.10);margin-top:18px;padding-top:14px}
+.lazo-uno{display:flex;flex-direction:column;align-items:center;gap:5px;max-width:132px}
+.lazo-como{font-family:var(--util);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#7C7563;text-align:center;line-height:1.5}
+
 .tarjeta-foco{border-top:1px solid var(--linea);padding-top:22px;margin-top:26px}
 .tarjeta-foco .rol{font-family:var(--util);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--acento);margin:0 0 6px}
 .tarjeta-foco h2{font-family:var(--display);font-weight:400;font-size:31px;margin:0 0 2px;line-height:1.1}
@@ -235,6 +242,7 @@ footer{border-top:1px solid var(--linea);padding:26px 0 46px;color:#948C79;font-
 .mundo svg{display:block}
 .rama-l{fill:none;stroke:var(--linea);stroke-width:1.2}
 .lazo-l{stroke:var(--acento);stroke-width:1.2;opacity:.65}
+.vinculo-l{stroke:var(--vino);stroke-width:1.1;stroke-dasharray:3 4;opacity:.75}
 .m-nodo{cursor:pointer}
 .m-disco{fill:var(--papel);stroke:var(--linea);stroke-width:1.2;transition:stroke .15s,fill .15s}
 .m-ini{font-family:var(--display);font-size:19px;fill:var(--tinta-suave);text-anchor:middle;dominant-baseline:central;pointer-events:none}
@@ -351,6 +359,7 @@ footer{border-top:1px solid var(--linea);padding:26px 0 46px;color:#948C79;font-
   <div class="bloque" id="bloque-padres"><h4>Padres</h4><div class="enlaces" id="panel-padres"></div></div>
   <div class="bloque" id="bloque-pareja"><h4>Uniones</h4><div class="enlaces" id="panel-pareja"></div></div>
   <div class="bloque" id="bloque-hijos"><h4>Descendencia</h4><div class="enlaces" id="panel-hijos"></div></div>
+  <div class="bloque" id="bloque-vinculos"><h4>Otros vínculos</h4><div id="panel-vinculos"></div></div>
 </aside>
 
 <script src="datos.js"></script>
@@ -365,6 +374,23 @@ const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const porId=Object.fromEntries(FIGURAS.map(f=>[f.id,f]));
 const hijosDe={};
 FIGURAS.forEach(f=>(f.padres||[]).forEach(p=>{(hijosDe[p]=hijosDe[p]||[]).push(f.id)}));
+
+/* Vínculos que no son de sangre ni de unión: amistades, amores no
+   correspondidos, servidumbres. Se escriben en una sola ficha, con la
+   frase que corresponda; la otra los hereda con la etiqueta neutra. */
+const vinculosDe={};
+function anotaVinculo(a,b,como){
+  const l=vinculosDe[a]=vinculosDe[a]||[];
+  if(!l.some(x=>x.id===b)) l.push({id:b,como:como});
+}
+function cadaVinculo(fn){
+  FIGURAS.forEach(f=>(f.vinculos||[]).forEach(x=>{
+    const id=(typeof x==="string")?x:x.id;
+    if(porId[id]&&id!==f.id) fn(f,id,((typeof x==="string")?"":x.como)||"Relacionado con");
+  }));
+}
+cadaVinculo((f,id,como)=>anotaVinculo(f.id,id,como));
+cadaVinculo((f,id)=>anotaVinculo(id,f.id,"Relacionado con"));
 
 /* --- cronología --- */
 const cont=$("#lista-cronologia");
@@ -443,6 +469,10 @@ function abrir(id){
   set("#bloque-padres","#panel-padres",f.padres);
   set("#bloque-pareja","#panel-pareja",f.pareja);
   set("#bloque-hijos","#panel-hijos",hijosDe[f.id]);
+  const vin=vinculosDe[f.id]||[];
+  $("#bloque-vinculos").style.display=vin.length?"":"none";
+  $("#panel-vinculos").innerHTML=vin.map(v=>
+    `<div class="vinc"><span class="vinc-como">${v.como}</span>${enlace(v.id)}</div>`).join("");
   panel.classList.add("visible");velo.classList.add("visible");
   panel.scrollTop=0;panel.focus();
   history.replaceState(null,"","#"+id);
@@ -528,6 +558,12 @@ function pintaDiagrama(id){
         </div></section>`;
     });
   }
+  const vin=vinculosDe[id]||[];
+  if(vin.length){
+    html+=`<section class="lazos"><p class="nivel-tit">Otros vínculos</p>
+      <div class="fila">${vin.map(v=>
+        `<div class="lazo-uno"><span class="lazo-como">${v.como}</span>${nodo(v.id)}</div>`).join("")}</div></section>`;
+  }
   dia.innerHTML=html;
   $$(".rama.abierta").forEach(midebarra);
 
@@ -595,7 +631,12 @@ function calculaMapa(){
     if(enCurso[id]) return 0;
     enCurso[id]=1;
     const ps=(porId[id].padres||[]).filter(p=>porId[p]);
-    prof[id]= ps.length ? 1+Math.max(...ps.map(profundidad)) : 0;
+    if(ps.length) prof[id]=1+Math.max(...ps.map(profundidad));
+    else{
+      /* sin padres, pero con un vínculo: se pone a su altura, no arriba del todo */
+      const vs=(vinculosDe[id]||[]).map(v=>v.id).filter(v=>porId[v]);
+      prof[id]= vs.length ? Math.max(...vs.map(profundidad)) : 0;
+    }
     enCurso[id]=0; return prof[id];
   };
   FIGURAS.forEach(f=>profundidad(f.id));
@@ -606,6 +647,7 @@ function calculaMapa(){
     if(visto.has(id)) return; visto.add(id); orden[id]=k++;
     const f=porId[id];
     (f.pareja||[]).forEach(p=>{ if(porId[p]&&!visto.has(p)&&prof[p]===prof[id]){visto.add(p);orden[p]=k++;} });
+    (vinculosDe[id]||[]).forEach(v=>{ if(!visto.has(v.id)&&prof[v.id]===prof[id]){visto.add(v.id);orden[v.id]=k++;} });
     (hijosDe[id]||[]).forEach(recorre);
   };
   FIGURAS.filter(f=>!(f.padres||[]).filter(p=>porId[p]).length).forEach(f=>recorre(f.id));
@@ -646,7 +688,13 @@ function calculaMapa(){
 
 function dibujaMapa(){
   if(!posMapa) calculaMapa();
-  const lineas=[], lazos=[], nodos=[], recortes=[];
+  const lineas=[], lazos=[], nodos=[], recortes=[], hecho=new Set();
+  FIGURAS.forEach(f=>(vinculosDe[f.id]||[]).forEach(v=>{
+    const par=[f.id,v.id].sort().join("|"); if(hecho.has(par)) return; hecho.add(par);
+    const a=posMapa[f.id], b=posMapa[v.id];
+    const dx=b.x-a.x, dy=b.y-a.y, d=Math.hypot(dx,dy)||1, m=MP.r/d;
+    lazos.push(`<line class="vinculo-l" x1="${a.x+dx*m}" y1="${a.y+dy*m}" x2="${b.x-dx*m}" y2="${b.y-dy*m}"/>`);
+  }));
   FIGURAS.forEach(f=>{
     const p=posMapa[f.id], ps=(f.padres||[]).filter(q=>porId[q]);
     if(ps.length){

@@ -39,6 +39,7 @@ coma a la entrada anterior y pega esto:
 | `gen` | En qué bloque del índice aparece. La tabla está más abajo. |
 | `padres` | Los `id` de sus padres. Si no los sabes: `padres:[]`. |
 | `pareja` | Los `id` de sus uniones. Si no tiene ninguna, borra la línea entera. |
+| `vinculos` | *Opcional.* Lazos que no son de sangre ni de unión: amistades, amores no correspondidos, servidumbres. |
 | `r` | La reseña: el texto principal del panel. |
 | `v` | *Opcional.* Variantes y fuentes: discrepancias entre autores, nombres alternativos, versiones minoritarias. Sale aparte, en letra más chica. |
 | `img` | *Opcional.* La ruta de la ilustración, por ejemplo `img:"imagenes/cadmo.jpg"`. |
@@ -52,6 +53,24 @@ descendencia de Cadmo, en su panel y en el árbol. Solo se declaran los padres.
 pero el panel lateral solo enseña lo que esa ficha declara. Si quieres que Cadmo
 aparezca en el panel de Harmonía, Harmonía tiene que nombrar a Cadmo en su
 `pareja`.
+
+### Vínculos que no son de sangre ni de unión
+
+Para lo que no cabe en `padres` ni en `pareja` —un amigo, un amor no
+correspondido, una sirvienta— está `vinculos`, con la frase que corresponda:
+
+```js
+vinculos:[{id:"faeton", como:"Pariente, amigo o amante de"}]
+```
+
+Si basta con la fórmula neutra *Relacionado con*, alcanza el `id` suelto:
+`vinculos:["faeton"]`.
+
+Se escribe en **una sola** de las dos fichas: la otra lo hereda y lo enseña como
+*Relacionado con*. Aparece en el panel, en una fila propia del diagrama *Familia*,
+y en el *Árbol completo* como una línea de puntos entre los dos. Además, a una
+figura sin padres la coloca a la altura de su vínculo en vez de dejarla suelta
+arriba del todo: así Cicno queda junto a Faetón, y Clitia junto a Helios.
 
 ---
 

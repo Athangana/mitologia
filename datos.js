@@ -18,6 +18,16 @@
    que puedes ir agregando ilustraciones de a poco. Conviene
    que sean cuadradas, de unos 400x400 pixeles.
 
+   El campo "vinculos" es opcional: para lazos que no son de sangre
+   ni de union (amistades, amores no correspondidos, servidumbres).
+   Se escribe en una sola ficha y la otra lo hereda:
+      vinculos:[{id:"faeton", como:"Amigo de"}]
+   o, si basta con la formula neutra "Relacionado con":
+      vinculos:["faeton"]
+   En el arbol completo los une una linea de puntos, y a quien no
+   tiene padres lo coloca a la altura de su vinculo en vez de dejarlo
+   suelto arriba del todo.
+
    El campo "v" es opcional: uselo para discrepancias entre
    fuentes, nombres alternativos y versiones minoritarias. Se
    muestra aparte, en letra mas chica, debajo de la resena.
@@ -598,7 +608,7 @@ const FIGURAS = [
  {id:"heliades", n:"Las Helíades", rol:"Hijas de Helios", epi:"Las hermanas de Faetón", gen:"gs", padres:["helios","climene-f"],
   r:"Hermanas de Faetón. Lo lloran con tanto duelo tras su muerte que Zeus, o los dioses en conjunto, se apiadan de ellas y las convierten en álamos; siguen llorando bajo esa forma, y las lágrimas de resina que dejan caer en el Erídano son el origen del ámbar.",
   v:"En una versión menos célebre es su propio padre quien las convierte en árboles, como castigo por haber enganchado los caballos al carro para Faetón sin su permiso. Ojo con los nombres: algunas fuentes y traducciones las llaman Heliadas, igual que a los siete hijos de Rodas, así que conviene distinguir los dos grupos por sus padres y no por la grafía."},
- {id:"cicno", n:"Cicno", rol:"Rey de los ligures", epi:"El cisne", gen:"gs", padres:[],
+ {id:"cicno", n:"Cicno", rol:"Rey de los ligures", epi:"El cisne", gen:"gs", padres:[], vinculos:[{id:"faeton", como:"Pariente, amigo o amante de"}],
   r:"Rey de los ligures y músico excelente, pariente, amigo o quizá amante de Faetón. Llora tanto su muerte que los dioses —probablemente Apolo— se apiadan de él y lo convierten en cisne, kyknos en griego: un ave que comparte su don para la música y que canta con tristeza antes de morir.",
   v:"Algunas versiones añaden que fue llevado al cielo como la constelación del Cisne. Hay otros Cicnos en la mitología griega, entre ellos un hijo de Poseidón que combate en Troya."},
  {id:"orcamo", n:"Órcamo", rol:"Rey de Persia", epi:"El padre implacable", gen:"gs", padres:[],
@@ -606,7 +616,7 @@ const FIGURAS = [
   v:"En otra versión el padre se llama Orcómeno, lo que indica que la historia también se contaba en Beocia, en la Grecia continental."},
  {id:"leucotoe", n:"Leucótoe", rol:"Princesa persa", epi:"La del incienso", gen:"gs", padres:["orcamo"], pareja:["helios"],
   r:"La joven más bella de la tierra de las especias. Helios se apasiona tanto por ella que olvida a todos sus amores anteriores; toma la apariencia de su madre para entrar en su cuarto, despide a las sirvientas y recupera su forma para seducirla. Delatada por los celos de Clitia, su padre la entierra viva y muere antes de que el dios pueda rescatarla. Helios derrama néctar sobre su cuerpo y la tierra, y de ese lugar brota un árbol de incienso."},
- {id:"clitia", n:"Clitia", rol:"Enamorada de Helios", epi:"La que se volvió flor", gen:"gs", padres:[],
+ {id:"clitia", n:"Clitia", rol:"Enamorada de Helios", epi:"La que se volvió flor", gen:"gs", padres:[], vinculos:[{id:"helios", como:"Enamorada de"}],
   r:"Sirvienta de Leucótoe, celosa del amor que Helios le tenía, esparce el rumor que lleva a su señora a la muerte. Helios la rechaza, y ella se consume de amor: deja de comer y de beber hasta convertirse en una flor que sigue al sol en su recorrido y así mantiene, bajo esa forma, su amor por él. Es el mito que explica el girasol.",
   v:"En otras versiones es hermana de Leucótoe y no sirvienta. El catálogo de las oceánides de Hesíodo incluye también una Clitia."},
  {id:"endimion", n:"Endimión", rol:"Héroe de la Élide", epi:"El durmiente", gen:"g5", padres:[], pareja:["selene"],
