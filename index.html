@@ -290,6 +290,14 @@ footer{padding:22px 0 46px;color:#8C7F63;font-family:var(--util);font-size:11px;
 .m-rol{font-family:var(--util);font-size:7.5px;letter-spacing:.09em;fill:#7E7157;text-anchor:middle;pointer-events:none;text-transform:uppercase}
 .m-nodo:hover .m-disco,.m-nodo.activo .m-disco{stroke:var(--acento);stroke-width:2;fill:rgba(166,70,44,.10)}
 .m-nodo.grupo .m-disco{stroke-dasharray:3 3}
+/* en vista aérea los nombres se vuelven una mancha: se retiran y
+   queda la constelación de medallones */
+.mundo.lejos .m-nom,.mundo.lejos .m-rol,.mundo.lejos .m-ini,.mundo.lejos .m-aro{display:none}
+.mundo.lejos .m-disco{fill:var(--tinta-suave);stroke:none}
+.mundo.lejos .m-nodo.grupo .m-disco{fill:none;stroke:var(--tinta-suave);stroke-width:5;stroke-dasharray:9 7}
+.mundo.lejos .rama-l{stroke:rgba(35,28,21,.34)}
+.mundo.lejos .union-l{stroke-width:3}
+.mundo.lejos .vinculo-l{stroke-width:3}
 .mandos{position:absolute;right:12px;bottom:12px;display:flex;flex-direction:column;gap:6px}
 .mandos button{width:38px;height:38px;background:rgba(242,233,215,.94);border:1px solid var(--linea);color:var(--tinta);
   font-family:var(--util);font-size:16px;border-radius:3px;cursor:pointer;line-height:1}
@@ -828,7 +836,10 @@ function resaltaEnMapa(id){
 /* --- navegación del lienzo: arrastrar, pellizcar y botones --- */
 let esc=1, tx=0, ty=0;
 const lienzo=$("#lienzo"), mundo=$("#mundo");
-const aplica=()=>{ mundo.style.transform=`translate(${tx}px,${ty}px) scale(${esc})` };
+const aplica=()=>{
+  mundo.style.transform=`translate(${tx}px,${ty}px) scale(${esc})`;
+  mundo.classList.toggle("lejos", esc<0.3);
+};
 
 /* El lienzo no se puede encuadrar mientras su pestaña está oculta:
    mide 0x0 y la escala se iría al mínimo. Se encuadra la primera vez
@@ -841,7 +852,9 @@ function verTodo(){
   if(!lienzoSeVe()) return;
   const c=lienzo.getBoundingClientRect();
   esc=Math.max(0.08, Math.min(Math.min(c.width/anchoMapa, c.height/altoMapa), 1));
-  tx=(c.width-anchoMapa*esc)/2; ty=24;
+  /* el árbol es mucho más ancho que alto: al encajarlo manda el ancho y
+     sobra sitio abajo, así que se centra en vertical */
+  tx=(c.width-anchoMapa*esc)/2; ty=Math.max(16,(c.height-altoMapa*esc)/2);
   aplica(); encuadrado=true;
 }
 /* el árbol entero mide casi diez mil píxeles: verlo completo deja los
