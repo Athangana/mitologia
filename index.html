@@ -240,9 +240,18 @@ footer{border-top:1px solid var(--linea);padding:26px 0 46px;color:#948C79;font-
 .lienzo.agarrando{cursor:grabbing}
 .mundo{position:absolute;top:0;left:0;transform-origin:0 0}
 .mundo svg{display:block}
-.rama-l{fill:none;stroke:var(--linea);stroke-width:1.2}
-.lazo-l{stroke:var(--acento);stroke-width:1.2;opacity:.65}
+.rama-l{fill:none;stroke:rgba(42,41,38,.20);stroke-width:1}
+.union-l{fill:none;stroke:var(--acento);stroke-width:1.4;opacity:.8;stroke-linecap:round}
+.nudo-u{fill:var(--acento);opacity:.85}
 .vinculo-l{stroke:var(--vino);stroke-width:1.1;stroke-dasharray:3 4;opacity:.75}
+/* al elegir una figura se encienden sus líneas y se apagan las demás */
+.mundo.eligiendo .rama-l,.mundo.eligiendo .union-l{opacity:.2}
+.mundo.eligiendo .nudo-u{opacity:.2}
+.rama-l.res{stroke:var(--vino);stroke-width:1.8;opacity:1}
+.union-l.res{stroke:var(--vino);stroke-width:2;opacity:1}
+.nudo-u.res{fill:var(--vino);opacity:1}
+.mundo.eligiendo .m-nodo{opacity:.45}
+.mundo.eligiendo .m-nodo.res,.mundo.eligiendo .m-nodo.activo{opacity:1}
 .m-nodo{cursor:pointer}
 .m-disco{fill:var(--papel);stroke:var(--linea);stroke-width:1.2;transition:stroke .15s,fill .15s}
 .m-ini{font-family:var(--display);font-size:19px;fill:var(--tinta-suave);text-anchor:middle;dominant-baseline:central;pointer-events:none}
@@ -620,9 +629,9 @@ pintaDiagrama("gea");
 requestAnimationFrame(()=>{dibujaMapa();ajustaMapa()});
 
 /* --- árbol completo: cálculo de posiciones y dibujo --- */
-const MP={sep:126, alto:158, r:22};
+const MP={sep:126, alto:184, r:22};
 const RAIZ=(porId.caos?"caos":(FIGURAS.find(f=>!(f.padres||[]).filter(p=>porId[p]).length)||FIGURAS[0]).id);
-let posMapa=null, anchoMapa=0, altoMapa=0;
+let posMapa=null, anchoMapa=0, altoMapa=0, grupoDe={}, grupos2=[];
 
 function calculaMapa(){
   const prof={}, enCurso={};
@@ -688,25 +697,54 @@ function calculaMapa(){
 
 function dibujaMapa(){
   if(!posMapa) calculaMapa();
-  const lineas=[], lazos=[], nodos=[], recortes=[], hecho=new Set();
+  const lineas=[], uniones=[], nudos=[], nodos=[], recortes=[], hecho=new Set();
+  grupoDe={};
+
+  /* una figura y su pareja no cuelgan cada hijo por su cuenta: se juntan
+     en un nudo de unión, del que baja un solo tronco hasta la barra que
+     reparte a los hermanos. Así se ve de quién viene cada rama. */
+  const grupos=new Map();
+  FIGURAS.forEach(f=>{
+    const ps=(f.padres||[]).filter(q=>porId[q]);
+    if(!ps.length) return;
+    const k=ps.slice().sort().join("|");
+    if(!grupos.has(k)) grupos.set(k,{padres:ps,hijos:[]});
+    grupos.get(k).hijos.push(f.id);
+  });
+
+  grupos2=[...grupos.values()];
+  grupos2.forEach((gr,i)=>{
+    const xs=gr.padres.map(q=>posMapa[q].x), ys=gr.padres.map(q=>posMapa[q].y);
+    const cx=xs.reduce((s,v)=>s+v,0)/xs.length, baseY=Math.max(...ys);
+    const hx=gr.hijos.map(h=>posMapa[h].x), hy=Math.min(...gr.hijos.map(h=>posMapa[h].y));
+    /* las barras vecinas se escalonan para no fundirse en una sola raya */
+    const bus=hy-MP.r-22-(i%3)*11;
+    const ky=Math.min(bus-14, baseY+MP.r+30);
+
+    let u="";
+    gr.padres.forEach(q=>{ u+=`M${posMapa[q].x} ${posMapa[q].y+MP.r} V${ky} H${cx} `; });
+    uniones.push(`<path class="union-l" data-g="${i}" d="${u.trim()}"/>`);
+    if(gr.padres.length>1) nudos.push(`<circle class="nudo-u" data-g="${i}" cx="${cx}" cy="${ky}" r="2.8"/>`);
+
+    let d=`M${cx} ${ky} V${bus} `;
+    if(gr.hijos.length>1) d+=`M${Math.min(...hx)} ${bus} H${Math.max(...hx)} `;
+    gr.hijos.forEach(h=>{ d+=`M${posMapa[h].x} ${bus} V${posMapa[h].y-MP.r} `; });
+    lineas.push(`<path class="rama-l" data-g="${i}" d="${d.trim()}"/>`);
+
+    gr.padres.concat(gr.hijos).forEach(id=>{ (grupoDe[id]=grupoDe[id]||[]).push(i) });
+  });
+
+  /* los lazos que no son de sangre ni de unión, en línea de puntos */
   FIGURAS.forEach(f=>(vinculosDe[f.id]||[]).forEach(v=>{
     const par=[f.id,v.id].sort().join("|"); if(hecho.has(par)) return; hecho.add(par);
     const a=posMapa[f.id], b=posMapa[v.id];
     const dx=b.x-a.x, dy=b.y-a.y, d=Math.hypot(dx,dy)||1, m=MP.r/d;
-    lazos.push(`<line class="vinculo-l" x1="${a.x+dx*m}" y1="${a.y+dy*m}" x2="${b.x-dx*m}" y2="${b.y-dy*m}"/>`);
+    uniones.push(`<line class="vinculo-l" data-v="${f.id} ${v.id}"
+      x1="${a.x+dx*m}" y1="${a.y+dy*m}" x2="${b.x-dx*m}" y2="${b.y-dy*m}"/>`);
   }));
+
   FIGURAS.forEach(f=>{
-    const p=posMapa[f.id], ps=(f.padres||[]).filter(q=>porId[q]);
-    if(ps.length){
-      const xs=ps.map(q=>posMapa[q].x), py=posMapa[ps[0]].y;
-      const cx=xs.reduce((s,v)=>s+v,0)/xs.length;
-      const medio=py+MP.r+((p.y-MP.r)-(py+MP.r))*0.55;
-      lineas.push(`<path class="rama-l" d="M${cx} ${py+MP.r} V${medio} H${p.x} V${p.y-MP.r}"/>`);
-      if(ps.length>1){
-        const a=Math.min(...xs), b=Math.max(...xs);
-        lazos.push(`<line class="lazo-l" x1="${a+MP.r}" y1="${py}" x2="${b-MP.r}" y2="${py}"/>`);
-      }
-    }
+    const p=posMapa[f.id];
     const grupo=/^(Los|Las)\s/.test(f.n)?" grupo":"";
     const nom=f.n.length>17?f.n.slice(0,16)+"\u2026":f.n;
     if(f.img) recortes.push(`<clipPath id="rec-${f.id}"><circle cx="${p.x}" cy="${p.y}" r="${MP.r}"/></clipPath>`);
@@ -719,8 +757,28 @@ function dibujaMapa(){
       <text class="m-nom" x="${p.x}" y="${p.y+MP.r+17}">${nom}</text>
       <text class="m-rol" x="${p.x}" y="${p.y+MP.r+31}">${f.rol}</text></g>`);
   });
+
   $("#mundo").innerHTML=`<svg width="${anchoMapa}" height="${altoMapa}" viewBox="0 0 ${anchoMapa} ${altoMapa}">
-    <defs>${recortes.join("")}</defs><g>${lazos.join("")}${lineas.join("")}</g><g>${nodos.join("")}</g></svg>`;
+    <defs>${recortes.join("")}</defs><g>${lineas.join("")}${uniones.join("")}${nudos.join("")}</g>
+    <g>${nodos.join("")}</g></svg>`;
+}
+
+/* encender el parentesco de la figura elegida y apagar el resto */
+function resaltaEnMapa(id){
+  const m=$("#mundo");
+  m.querySelectorAll(".res").forEach(o=>o.classList.remove("res"));
+  if(!id){ m.classList.remove("eligiendo"); return }
+  m.classList.add("eligiendo");
+  const familia=new Set([id]);
+  (grupoDe[id]||[]).forEach(i=>{
+    m.querySelectorAll(`[data-g="${i}"]`).forEach(o=>o.classList.add("res"));
+    [...grupos2[i].padres,...grupos2[i].hijos].forEach(x=>familia.add(x));
+  });
+  m.querySelectorAll("[data-v]").forEach(o=>{
+    const par=o.dataset.v.split(" ");
+    if(par.includes(id)){ o.classList.add("res"); par.forEach(x=>familia.add(x)) }
+  });
+  familia.forEach(x=>{ const g=m.querySelector(`.m-nodo[data-id="${x}"]`); if(g) g.classList.add("res") });
 }
 
 /* --- navegación del lienzo: arrastrar, pellizcar y botones --- */
@@ -790,9 +848,11 @@ lienzo.addEventListener("pointermove",e=>{
    salga del marco, y eso desvía el clic hacia él: quien decide si se
    abre una ficha es este soltar, no un "click". */
 lienzo.addEventListener("pointerup",()=>{
-  if(movido>8||punteros.size>1||!objetivo) return;
+  if(movido>8||punteros.size>1) return;
   $$(".m-nodo.activo").forEach(o=>o.classList.remove("activo"));
+  if(!objetivo){ resaltaEnMapa(null); return }
   objetivo.classList.add("activo");
+  resaltaEnMapa(objetivo.dataset.ir);
   abrir(objetivo.dataset.ir);
 });
 ["pointerup","pointercancel","pointerleave"].forEach(ev=>lienzo.addEventListener(ev,e=>{
