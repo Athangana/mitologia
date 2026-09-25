@@ -581,10 +581,11 @@ $$(".modos .chip").forEach(c=>c.addEventListener("click",()=>{
 }));
 
 pintaDiagrama("gea");
-requestAnimationFrame(ajustaMapa);
+requestAnimationFrame(()=>{dibujaMapa();ajustaMapa()});
 
 /* --- árbol completo: cálculo de posiciones y dibujo --- */
 const MP={sep:126, alto:158, r:22};
+const RAIZ=(porId.caos?"caos":(FIGURAS.find(f=>!(f.padres||[]).filter(p=>porId[p]).length)||FIGURAS[0]).id);
 let posMapa=null, anchoMapa=0, altoMapa=0;
 
 function calculaMapa(){
@@ -679,29 +680,48 @@ let esc=1, tx=0, ty=0;
 const lienzo=$("#lienzo"), mundo=$("#mundo");
 const aplica=()=>{ mundo.style.transform=`translate(${tx}px,${ty}px) scale(${esc})` };
 
-function ajustaMapa(){
-  dibujaMapa();
+/* El lienzo no se puede encuadrar mientras su pestaña está oculta:
+   mide 0x0 y la escala se iría al mínimo. Se encuadra la primera vez
+   que se ve de verdad, y desde entonces se respeta dónde lo dejaste. */
+let encuadrado=false;
+const lienzoSeVe=()=>lienzo.clientWidth>0&&lienzo.clientHeight>0;
+
+function verTodo(){
+  if(!posMapa) dibujaMapa();
+  if(!lienzoSeVe()) return;
   const c=lienzo.getBoundingClientRect();
-  esc=Math.min(c.width/anchoMapa, c.height/altoMapa);
-  esc=Math.max(0.08, Math.min(esc, 1));
+  esc=Math.max(0.08, Math.min(Math.min(c.width/anchoMapa, c.height/altoMapa), 1));
   tx=(c.width-anchoMapa*esc)/2; ty=24;
-  aplica();
+  aplica(); encuadrado=true;
 }
+/* el árbol entero mide casi diez mil píxeles: verlo completo deja los
+   nombres ilegibles, así que se empieza arriba del todo y a buen tamaño */
+function centraEn(id,escala){
+  if(!posMapa) dibujaMapa();
+  if(!lienzoSeVe()) return;
+  const c=lienzo.getBoundingClientRect(), p=posMapa[id]||Object.values(posMapa)[0];
+  esc=escala;
+  tx=c.width/2-p.x*esc; ty=Math.max(24, c.height*0.2-p.y*esc);
+  aplica(); encuadrado=true;
+}
+function ajustaMapa(){ if(!encuadrado) centraEn(RAIZ,0.9) }
 function zoom(factor, cx, cy){
   const c=lienzo.getBoundingClientRect();
   cx=cx==null?c.width/2:cx; cy=cy==null?c.height/2:cy;
   const nueva=Math.max(0.08, Math.min(3, esc*factor));
   tx=cx-(cx-tx)*(nueva/esc); ty=cy-(cy-ty)*(nueva/esc); esc=nueva; aplica();
 }
+$(".mandos").addEventListener("pointerdown",e=>e.stopPropagation());
 $("#zmas").addEventListener("click",()=>zoom(1.3));
 $("#zmenos").addEventListener("click",()=>zoom(1/1.3));
-$("#zajuste").addEventListener("click",ajustaMapa);
+$("#zajuste").addEventListener("click",verTodo);
 
-let punteros=new Map(), arrastre=null, sepIni=0, escIni=1, movido=0;
+let punteros=new Map(), arrastre=null, sepIni=0, escIni=1, movido=0, objetivo=null;
 lienzo.addEventListener("pointerdown",e=>{
   lienzo.setPointerCapture(e.pointerId);
   punteros.set(e.pointerId,{x:e.clientX,y:e.clientY});
   movido=0;
+  objetivo=e.target.closest?e.target.closest("[data-ir]"):null;
   if(punteros.size===1){ arrastre={x:e.clientX-tx, y:e.clientY-ty}; lienzo.classList.add("agarrando"); }
   if(punteros.size===2){ const [a,b]=[...punteros.values()]; sepIni=Math.hypot(a.x-b.x,a.y-b.y); escIni=esc; }
 });
@@ -718,6 +738,15 @@ lienzo.addEventListener("pointermove",e=>{
     if(sepIni>0) zoom((escIni*sep/sepIni)/esc, mx, my);
   }else if(arrastre){ tx=e.clientX-arrastre.x; ty=e.clientY-arrastre.y; aplica(); }
 });
+/* El lienzo captura el puntero para poder arrastrar aunque el dedo se
+   salga del marco, y eso desvía el clic hacia él: quien decide si se
+   abre una ficha es este soltar, no un "click". */
+lienzo.addEventListener("pointerup",()=>{
+  if(movido>8||punteros.size>1||!objetivo) return;
+  $$(".m-nodo.activo").forEach(o=>o.classList.remove("activo"));
+  objetivo.classList.add("activo");
+  abrir(objetivo.dataset.ir);
+});
 ["pointerup","pointercancel","pointerleave"].forEach(ev=>lienzo.addEventListener(ev,e=>{
   punteros.delete(e.pointerId);
   if(punteros.size<2) sepIni=0;
@@ -728,15 +757,7 @@ lienzo.addEventListener("wheel",e=>{
   const c=lienzo.getBoundingClientRect();
   zoom(e.deltaY<0?1.12:1/1.12, e.clientX-c.left, e.clientY-c.top);
 },{passive:false});
-lienzo.addEventListener("click",e=>{
-  if(movido>8) return;
-  const g=e.target.closest("[data-ir]");
-  if(g){
-    $$(".m-nodo.activo").forEach(o=>o.classList.remove("activo"));
-    g.classList.add("activo");
-    abrir(g.dataset.ir);
-  }
-});
+
 
 /* --- pestañas --- */
 function verVista(id){
@@ -745,6 +766,9 @@ function verVista(id){
   window.scrollTo({top:0,behavior:"instant"});
 }
 $$(".tab").forEach(t=>t.addEventListener("click",()=>verVista(t.getAttribute("aria-controls"))));
+/* el lienzo recién tiene tamaño cuando su pestaña se hace visible */
+const obs=new ResizeObserver(()=>{if(!encuadrado&&lienzoSeVe())ajustaMapa()});
+obs.observe(lienzo);
 if(location.hash==="#arbol")verVista("arbol");
 
 /* --- búsqueda --- */
