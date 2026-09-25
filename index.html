@@ -268,8 +268,13 @@ footer{padding:22px 0 46px;color:#8C7F63;font-family:var(--util);font-size:11px;
 .lienzo.agarrando{cursor:grabbing}
 .mundo{position:absolute;top:0;left:0;transform-origin:0 0}
 .mundo svg{display:block}
+/* una banda tenue por generación: en un mapa tan ancho y tan vacío,
+   es lo que deja seguir una fila de un extremo a otro */
+.banda{fill:rgba(35,28,21,.035)}
 .rama-l{fill:none;stroke:rgba(35,28,21,.20);stroke-width:1}
 .union-l{fill:none;stroke:var(--bronce);stroke-width:1.4;opacity:.8;stroke-linecap:round}
+.union-l.larga{stroke-dasharray:6 6;opacity:.45;stroke-width:1.2}
+.mundo.eligiendo .union-l.larga.res{opacity:.95;stroke-dasharray:6 6}
 .nudo-u{fill:var(--bronce);opacity:.85}
 .vinculo-l{stroke:var(--vino);stroke-width:1.1;stroke-dasharray:3 4;opacity:.75}
 /* al elegir una figura se encienden sus líneas y se apagan las demás */
@@ -750,6 +755,11 @@ function dibujaMapa(){
   if(!posMapa) calculaMapa();
   const lineas=[], uniones=[], nudos=[], nodos=[], recortes=[], hecho=new Set();
   grupoDe={};
+  const bandas=[];
+  for(let d=0, hondo=Math.max(...FIGURAS.map(f=>posMapa[f.id].d)); d<=hondo; d++){
+    if(d%2) bandas.push(`<rect class="banda" x="0" y="${d*MP.alto+60-MP.alto*0.46}"
+      width="${anchoMapa}" height="${MP.alto}"/>`);
+  }
 
   /* una figura y su pareja no cuelgan cada hijo por su cuenta: se juntan
      en un nudo de unión, del que baja un solo tronco hasta la barra que
@@ -765,16 +775,25 @@ function dibujaMapa(){
 
   grupos2=[...grupos.values()];
   grupos2.forEach((gr,i)=>{
-    const xs=gr.padres.map(q=>posMapa[q].x), ys=gr.padres.map(q=>posMapa[q].y);
-    const cx=xs.reduce((s,v)=>s+v,0)/xs.length, baseY=Math.max(...ys);
+    const ys=gr.padres.map(q=>posMapa[q].y), baseY=Math.max(...ys);
     const hx=gr.hijos.map(h=>posMapa[h].x), hy=Math.min(...gr.hijos.map(h=>posMapa[h].y));
+    /* el nudo va sobre los hijos, no en el punto medio entre los padres:
+       si la pareja está lejos —Zeus en la fila 4, Alcmena en la 16— el
+       punto medio caía a mil píxeles de su hijo y abría un rectángulo
+       vacío que se comía el dibujo */
+    const cx=(Math.min(...hx)+Math.max(...hx))/2;
     /* las barras vecinas se escalonan para no fundirse en una sola raya */
     const bus=hy-MP.r-22-(i%3)*11;
     const ky=Math.min(bus-14, baseY+MP.r+30);
 
-    let u="";
-    gr.padres.forEach(q=>{ u+=`M${posMapa[q].x} ${posMapa[q].y+MP.r} V${ky} H${cx} `; });
-    uniones.push(`<path class="union-l" data-g="${i}" d="${u.trim()}"/>`);
+    gr.padres.forEach(q=>{
+      const px=posMapa[q].x, py=posMapa[q].y;
+      /* un padre a muchas filas o columnas de distancia se dibuja en
+         trazos: se sigue si se quiere, pero no tapa la familia cercana */
+      const lejos=(ky-(py+MP.r))>MP.alto*1.8 || Math.abs(px-cx)>MP.sep*7;
+      uniones.push(`<path class="union-l${lejos?" larga":""}" data-g="${i}"
+        d="M${px} ${py+MP.r} V${ky} H${cx}"/>`);
+    });
     if(gr.padres.length>1) nudos.push(`<circle class="nudo-u" data-g="${i}" cx="${cx}" cy="${ky}" r="2.8"/>`);
 
     let d=`M${cx} ${ky} V${bus} `;
@@ -811,7 +830,8 @@ function dibujaMapa(){
   });
 
   $("#mundo").innerHTML=`<svg width="${anchoMapa}" height="${altoMapa}" viewBox="0 0 ${anchoMapa} ${altoMapa}">
-    <defs>${recortes.join("")}</defs><g>${lineas.join("")}${uniones.join("")}${nudos.join("")}</g>
+    <defs>${recortes.join("")}</defs><g>${bandas.join("")}</g>
+    <g>${lineas.join("")}${uniones.join("")}${nudos.join("")}</g>
     <g>${nodos.join("")}</g></svg>`;
 }
 
@@ -864,7 +884,7 @@ function centraEn(id,escala){
   if(!lienzoSeVe()) return;
   const c=lienzo.getBoundingClientRect(), p=posMapa[id]||Object.values(posMapa)[0];
   esc=escala;
-  tx=c.width/2-p.x*esc; ty=Math.max(24, c.height*0.2-p.y*esc);
+  tx=c.width/2-p.x*esc; ty=Math.min(24, c.height*0.28-p.y*esc);
   aplica(); encuadrado=true;
 }
 function ajustaMapa(){ if(!encuadrado) centraEn(RAIZ,0.9) }
